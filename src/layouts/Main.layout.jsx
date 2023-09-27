@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
 function MainLayout({ children }) {
@@ -83,9 +83,12 @@ function MainLayout({ children }) {
                                                     </g>
                                                 </svg>
                                             </div>
-                                            <span className="invisible xl:visible absolute xl:static">
+                                            <NavLink
+                                                to="/"
+                                                className="invisible xl:visible absolute xl:static"
+                                            >
                                                 Beranda
-                                            </span>
+                                            </NavLink>
                                         </a>
                                     </li>
                                     <li>
@@ -110,9 +113,12 @@ function MainLayout({ children }) {
                                                     </g>
                                                 </svg>
                                             </div>
-                                            <span className="invisible xl:visible absolute xl:static">
+                                            <NavLink
+                                                to="/trend"
+                                                className="invisible xl:visible absolute xl:static"
+                                            >
                                                 Jelajahi
-                                            </span>
+                                            </NavLink>
                                         </a>
                                     </li>
                                     <li>
@@ -137,9 +143,12 @@ function MainLayout({ children }) {
                                                     </g>
                                                 </svg>
                                             </div>
-                                            <span className="invisible xl:visible absolute xl:static">
+                                            <NavLink
+                                                to="/notifikasi"
+                                                className="invisible xl:visible absolute xl:static"
+                                            >
                                                 Notifikasi
-                                            </span>
+                                            </NavLink>
                                         </a>
                                     </li>
                                     <li>
@@ -164,9 +173,12 @@ function MainLayout({ children }) {
                                                     </g>
                                                 </svg>
                                             </div>
-                                            <span className="invisible xl:visible absolute xl:static">
+                                            <NavLink
+                                                to="/chat"
+                                                className="invisible xl:visible absolute xl:static"
+                                            >
                                                 Pesan
-                                            </span>
+                                            </NavLink>
                                         </a>
                                     </li>
                                     <li>
@@ -191,9 +203,12 @@ function MainLayout({ children }) {
                                                     </g>
                                                 </svg>
                                             </div>
-                                            <span className="invisible xl:visible absolute xl:static">
+                                            <NavLink
+                                                to="/profile"
+                                                className="invisible xl:visible absolute xl:static"
+                                            >
                                                 Profil
-                                            </span>
+                                            </NavLink>
                                         </a>
                                     </li>
                                 </ul>

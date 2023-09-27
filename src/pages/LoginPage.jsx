@@ -1,7 +1,19 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useState } from "react";
+import ModalLogin from "../components/ModalLogin";
 
 function LoginPage() {
+    const [modal, setModal] = useState(false);
+
+    const modalBTN = (e) => {
+        e.preventDefault();
+        setModal(true);
+    };
+
+    const closeModal = () => {
+        setModal(false);
+    };
+
     return (
         <>
             <main className="flex flex-col-reverse min-[1017px]:flex-row">
@@ -178,9 +190,14 @@ function LoginPage() {
                             <h4 className="mt-[0.5rem] font-[500]">
                                 Already have an account?
                             </h4>
-                            <button className="border border-blue-400 w-[300px] text-[#1D9bf0] rounded-3xl py-2 mt-5 flex items-center justify-center space-x-2 hover:bg-sky-500/[0.1]">
+                            <button
+                                onClick={modalBTN}
+                                className="border border-blue-400 w-[300px] text-[#1D9bf0] rounded-3xl py-2 mt-5 flex items-center justify-center space-x-2 hover:bg-sky-500/[0.1]"
+                            >
                                 Sign in
                             </button>
+
+                            {modal && <ModalLogin closeModal={closeModal} />}
                         </div>
                     </div>
                 </section>
@@ -255,7 +272,7 @@ function LoginPage() {
                     {" "}
                     Settings
                 </a>
-                <p className="mx-[6px] mt-2">© 2023 X Corp.</p>
+                <p className="mx-[6px] mt-2">© 2023 twitter Corp.</p>
             </footer>
         </>
     );
