@@ -1,4 +1,13 @@
+import { useEffect } from "react";
+import { fetchSideTrend } from "../redux/slices/trend";
+import { useSelector, useDispatch } from "react-redux";
 function BerandaPage() {
+    const state = useSelector((state) => state.trend.data);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(fetchSideTrend());
+    }, [dispatch]);
+    console.log(state);
     return (
         <>
             <header className="p-4 border-y border-slate-300 sticky top-0 bg-white/90">
