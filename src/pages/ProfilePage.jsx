@@ -1,11 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
+    const navigate = useNavigate();
     return (
         <div className="w-full flex flex-col border overflow-x-hidden min-h-screen">
             <div className="flex flex-row p-2 mt-0 fixed max-w-[41.3rem] w-full bg-white shadow-md z-[99999]">
-                <div className="flex justify-center items-center mx-4 hover:bg-gray-100 cursor-pointer rounded-full p-1">
+                <button
+                    className="flex justify-center items-center mx-4 hover:bg-gray-100 cursor-pointer rounded-full p-1"
+                    onClick={() => {
+                        navigate(-1);
+                    }}
+                >
                     <svg
                         width="2rem"
                         height="2rem"
@@ -21,7 +28,7 @@ function ProfilePage() {
                             strokeLinejoin="round"
                         />
                     </svg>
-                </div>
+                </button>
                 <div className="flex flex-col justify-center items-start mx-3">
                     <h1 className="font-bold">Kelompok 2</h1>
                     <h3 className="text-sm font-[200] opacity-50">

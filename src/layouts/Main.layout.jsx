@@ -1,9 +1,22 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
-import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+
 import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
+import ModalLogout from "../components/ModalLogout";
+
 function MainLayout({ children }) {
+    const [open, setOpen] = useState(false);
+
+    const openModal = () => {
+        setOpen(true);
+    };
+
+    const cancelLogout = () => {
+        setOpen(false);
+    };
+
     return (
         <div className="grid grid-cols-12 w-auto box-border">
             <aside className="invisible absolute md:static md:visible md:col-span-2 xl:col-span-3 box-border">
@@ -57,9 +70,9 @@ function MainLayout({ children }) {
                             <div className="flex-col">
                                 <ul className="text-xl">
                                     <li>
-                                        <a
+                                        <NavLink
                                             className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
-                                            href="#"
+                                            to={"/"}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -86,12 +99,12 @@ function MainLayout({ children }) {
                                             <span className="invisible xl:visible absolute xl:static">
                                                 Beranda
                                             </span>
-                                        </a>
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <a
+                                        <NavLink
                                             className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
-                                            href="#"
+                                            to={"/trend"}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -113,12 +126,12 @@ function MainLayout({ children }) {
                                             <span className="invisible xl:visible absolute xl:static">
                                                 Jelajahi
                                             </span>
-                                        </a>
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <a
+                                        <NavLink
                                             className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
-                                            href="#"
+                                            to={"/notifikasi"}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -140,12 +153,12 @@ function MainLayout({ children }) {
                                             <span className="invisible xl:visible absolute xl:static">
                                                 Notifikasi
                                             </span>
-                                        </a>
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <a
+                                        <NavLink
                                             className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
-                                            href="#"
+                                            to={"/chat"}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -167,12 +180,12 @@ function MainLayout({ children }) {
                                             <span className="invisible xl:visible absolute xl:static">
                                                 Pesan
                                             </span>
-                                        </a>
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <a
+                                        <NavLink
                                             className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
-                                            href="#"
+                                            to={"/profile"}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -194,7 +207,7 @@ function MainLayout({ children }) {
                                             <span className="invisible xl:visible absolute xl:static">
                                                 Profil
                                             </span>
-                                        </a>
+                                        </NavLink>
                                     </li>
                                 </ul>
                             </div>
@@ -239,9 +252,9 @@ function MainLayout({ children }) {
                         <div className="flex flex-wrap">
                             <ul>
                                 <li>
-                                    <a
+                                    <button
                                         className="relative justify-center h-16 w-16 xl:w-64 xl:px-3 items-center rounded-full hover:bg-gray-200 flex xl:justify-between"
-                                        href="#"
+                                        onClick={openModal}
                                     >
                                         <div className="align-baseline">
                                             <svg
@@ -298,7 +311,12 @@ function MainLayout({ children }) {
                                                 </g>
                                             </svg>
                                         </div>
-                                    </a>
+                                    </button>
+                                    {open && (
+                                        <ModalLogout
+                                            cancelLogout={cancelLogout}
+                                        />
+                                    )}
                                 </li>
                             </ul>
                         </div>
