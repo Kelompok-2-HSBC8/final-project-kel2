@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import { useState } from "react";
 import ModalLogin from "../components/ModalLogin";
 
 function LoginPage() {
