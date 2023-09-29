@@ -20,6 +20,12 @@ const getUser = async () => {
     } catch (e) {
         console.log(e);
     }
+<<<<<<< HEAD
 };
 
 export { getTweets, getUser };
+=======
+}
+
+export { getTweets, getUser };
+>>>>>>> 3873b5e8d0ec053665ff8d85d773a9efba0e88ff
