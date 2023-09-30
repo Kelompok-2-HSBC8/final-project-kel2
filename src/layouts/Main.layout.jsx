@@ -1,10 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-
 import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
 import ModalLogout from "../components/ModalLogout";
+import { useEffect } from "react";
+import { fetchUser } from "../redux/slices/user";
+import { useSelector, useDispatch } from "react-redux";
 
 function MainLayout({ children }) {
     const [open, setOpen] = useState(false);
@@ -17,6 +19,14 @@ function MainLayout({ children }) {
         setOpen(false);
     };
 
+    const { data } = useSelector((state) => state.user);
+    const token = localStorage.getItem("token");
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(fetchUser());
+    }, [dispatch]);
+
+    const filterUser = data.filter((item) => item.token === token);
     return (
         <div className="grid grid-cols-12 w-auto box-border">
             <aside className="invisible absolute md:static md:visible md:col-span-2 xl:col-span-3 box-border">
@@ -286,14 +296,20 @@ function MainLayout({ children }) {
                                                 </g>
                                             </svg>
                                         </div>
-                                        <div>
-                                            <p className="font-bold text-sm absolute xl:static invisible xl:visible">
-                                                HSBC8 Kelompok 2
-                                            </p>
-                                            <p className="text-sm absolute xl:static invisible xl:visible">
-                                                @HSBC8_Kelompok2
-                                            </p>
-                                        </div>
+                                        {filterUser.map((item) => {
+                                            return (
+                                            
+                                                    <div key={item.id}>
+                                                        <p className="font-bold text-sm absolute xl:static invisible xl:visible">
+                                                            {item.displayName}
+                                                        </p>
+                                                        <p className="text-sm absolute xl:static invisible xl:visible">
+                                                            @{item.userName}
+                                                        </p>
+                                                    </div>
+                                                
+                                            );
+                                        })}
                                         <div className="absolute xl:static invisible xl:visible">
                                             <svg
                                                 width="19"
