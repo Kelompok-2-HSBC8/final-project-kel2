@@ -5,14 +5,26 @@ import TweetCard from "../components/berandaComponent/TweetCard";
 import TweetPost from "../components/berandaComponent/TweetPost";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
+import Loading from "../components/Loading";
 
 function BerandaPage() {
-    const state = useSelector((state) => state.tweet.data);
-    const { loading, data, error } = useSelector((state) => state.tweet);
+    const { data, loading } = useSelector((state) => state.tweet);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchTweets());
     }, [dispatch]);
+
+    if (loading) {
+        return (
+            <>
+                <Header value="Home" />
+                <TweetPost />
+                <div className="flex justify-center items-center">
+                    <Loading />
+                </div>
+            </>
+        );
+    }
 
     return (
         <>

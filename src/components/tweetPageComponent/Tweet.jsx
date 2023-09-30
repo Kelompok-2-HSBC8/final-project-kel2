@@ -1,5 +1,5 @@
 import moment from "moment/moment";
-
+import PropTypes from "prop-types";
 export default function Tweet({ data }) {
     // console.log(data);
     const {
@@ -7,10 +7,6 @@ export default function Tweet({ data }) {
         displayName,
         userName,
         bodyTweet,
-        totalComment,
-        totalLike,
-        totalRetweet,
-        totalShare,
         createdAt,
     } = data;
 
@@ -54,3 +50,17 @@ export default function Tweet({ data }) {
         </>
     );
 }
+
+Tweet.propTypes = {
+    data: PropTypes.shape({
+        avatar: PropTypes.string,
+        displayName: PropTypes.string,
+        userName: PropTypes.string,
+        bodyTweet: PropTypes.string,
+        totalComment: PropTypes.number,
+        totalLike: PropTypes.number,
+        totalRetweet: PropTypes.number,
+        totalShare: PropTypes.number,
+        createdAt: PropTypes.string,
+    }),
+};
