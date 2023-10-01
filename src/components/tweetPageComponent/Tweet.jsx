@@ -7,6 +7,10 @@ export default function Tweet({ data }) {
         userName,
         bodyTweet,
         createdAt,
+        totalComment,
+        totalRetweet,
+        totalShare,
+        totalLike,
     } = data;
 
     const date = moment(createdAt).format("hh:mm a . D MMM YYYY");
