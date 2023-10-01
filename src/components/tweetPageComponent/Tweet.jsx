@@ -18,7 +18,7 @@ export default function Tweet({ data }) {
 
     console.log(data);
     return (
-        <div>
+        <div className="min-h-screen">
             <section className="tweet p-4 border-b border-slate-300">
                 <div className="flex items-center mb-2">
                     <div className="mr-4">
