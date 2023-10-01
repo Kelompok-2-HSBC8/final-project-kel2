@@ -20,6 +20,6 @@ const getUser = async () => {
     } catch (e) {
         console.log(e);
     }
-}
+};
 
 export { getTweets, getUser };

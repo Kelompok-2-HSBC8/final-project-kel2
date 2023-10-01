@@ -1,12 +1,16 @@
+//Middleware.Router.jsx
 import PropTypes from "prop-types";
 import { useLocation, Navigate } from "react-router-dom";
+import auth from "../utils/auth";
 
 const Middleware = ({ page }) => {
     const location = useLocation();
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const isAuthenticated = auth.isAuthenticated();
+
+    if (!isAuthenticated) {
         return <Navigate to={"/login"} state={{ from: location }} replace />;
     }
+
     return page;
 };
 
