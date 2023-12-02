@@ -25,17 +25,17 @@ export default function TweetCard(props) {
 
             <div className="w-full">
                 <div className="px-2">
-                    <div>
+                    <div >
                         {/* <a href="#"> */}
-                        <span className="font-bold hover:underline">
-                            {displayName}
+                        <span className="font-bold cursor-pointer">
+                            {displayName}{" "}
                         </span>
                         {/* </a> */}
-                        <span className="font-medium text-[#8899A6]">
-                            @{userName}
+                        <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
+                            @{userName.toLowerCase().split(" ").join("")}{" "}
                         </span>
-                        <span className="font-medium text-[#8899A6]">
-                        ∙ {new Date(date).toLocaleDateString("en-US")}
+                        <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
+                         • {new Date(date).toLocaleDateString("id-ID")}
                         </span>
                     </div>
 
