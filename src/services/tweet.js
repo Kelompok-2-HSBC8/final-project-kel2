@@ -17,8 +17,8 @@ export const getTweet = () => {
     return api().get("/v1/tweet");
 };
 
-export const createTweet = (content, id) => {
-    return api().post("/v1/tweet", { content, id });
+export const createTweet = (body) => {
+    return api().post("/v1/tweet", body);
 };
 
 export const getTweetById = (id) => {

@@ -1,8 +1,28 @@
-export default function TweetPost() {
+import { useState } from "react";
+import { createTweet } from "../../services/tweet";
+import PropTypes from "prop-types";
+export default function TweetPost({ isRefresh }) {
+    const [content, setContent] = useState("");
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
     );
     console.log(data.user.id);
+
+    const handleSubmit = async () => {
+        try {
+            const res = await createTweet({ content, id: data.user.id });
+            if (res) {
+                isRefresh(true);
+                setContent("");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleContent = (e) => {
+        setContent(e.target.value);
+    };
     return (
         <section className="post p-4 flex border-b border-slate-300 mb-3">
             <div className="profile-picture mr-4">
@@ -18,6 +38,7 @@ export default function TweetPost() {
                     maxLength="280"
                     rows="4"
                     placeholder="What is happening ?!"
+                    onChange={handleContent}
                     className="w-full resize-none border-none focus:outline-none focus:ring-0"
                 ></textarea>
 
@@ -50,7 +71,10 @@ export default function TweetPost() {
                         </div>
                     </div>
                     <div>
-                        <button className="bg-sky-500 hover:bg-sky-600 rounded-full w-20 h-8 font-bold text-white">
+                        <button
+                            className="bg-sky-500 hover:bg-sky-600 rounded-full w-20 h-8 font-bold text-white"
+                            onClick={handleSubmit}
+                        >
                             Post
                         </button>
                     </div>
@@ -59,3 +83,7 @@ export default function TweetPost() {
         </section>
     );
 }
+
+TweetPost.propTypes = {
+    isRefresh: PropTypes.bool,
+};
