@@ -21,5 +21,6 @@ module.exports = {
         "prettier/prettier": "off",
         "arrow-body-style": "off",
         "prefer-arrow-callback": "off",
+        "no-unused-vars": "off",
     },
 };

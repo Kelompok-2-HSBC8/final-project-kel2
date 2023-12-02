@@ -1,16 +1,13 @@
 // eslint-disable-next-line no-unused-vars
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
 import ModalLogout from "../components/ModalLogout";
-import { useEffect } from "react";
-import { fetchUser } from "../redux/slices/user";
 import { useSelector, useDispatch } from "react-redux";
 
 function MainLayout({ children }) {
     const [open, setOpen] = useState(false);
-
     const openModal = () => {
         setOpen(true);
     };
@@ -19,14 +16,9 @@ function MainLayout({ children }) {
         setOpen(false);
     };
 
-    const { data } = useSelector((state) => state.user);
-    const token = localStorage.getItem("token");
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(fetchUser());
-    }, [dispatch]);
-
-    const filterUser = data.filter((item) => item.token === token);
+    const data = JSON.parse(
+        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+    );
     return (
         <div className="grid grid-cols-12 w-auto box-border">
             <aside className="invisible absolute md:static md:visible md:col-span-2 xl:col-span-3 box-border">
@@ -266,50 +258,24 @@ function MainLayout({ children }) {
                                         className="relative justify-center h-16 w-16 xl:w-64 xl:px-3 items-center rounded-full hover:bg-gray-200 flex xl:justify-between"
                                         onClick={openModal}
                                     >
-                                        <div className="align-baseline">
-                                            <svg
-                                                className="rounded-full"
-                                                version=" 1.0"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="30.000000pt"
-                                                height="30.000000pt"
-                                                viewBox="0 0 127.000000 129.000000"
-                                                preserveAspectRatio="xMidYMid meet"
-                                            >
-                                                <g
-                                                    transform="translate(0.000000,129.000000) scale(0.100000,-0.100000)"
-                                                    fill="#000000"
-                                                    stroke="none"
-                                                >
-                                                    <path
-                                                        d="M0 645 l0 -645 635 0 635 0 0 645 0 645 -635 0 -635 0 0 -645z m734
-                                                                    342 c22 -12 53 -39 70 -60 57 -71 45 -199 -23 -261 l-21 -19 48 -28 c97 -55
-                                                                    169 -157 180 -254 5 -45 1 -50 -35 -44 -5 1 -15 27 -24 58 -29 108 -87 174
-                                                                    -184 210 -67 25 -123 27 -195 5 -97 -29 -200 -157 -200 -251 0 -18 -6 -23 -25
-                                                                    -23 -22 0 -25 4 -24 38 1 79 70 194 143 240 24 15 52 32 62 38 18 11 18 13 -8
-                                                                    40 -58 62 -72 138 -38 212 50 109 176 155 274 99z"
-                                                    />
-                                                    <path
-                                                        d="M580 943 c-125 -65 -98 -255 39 -278 82 -14 159 45 168 129 13 115
-                                                                    -107 201 -207 149z"
-                                                    />
-                                                </g>
-                                            </svg>
+                                        <div className="mr-4">
+                                            <img
+                                                src={data?.user.user_metadata.avatar_url}
+                                                className="rounded-full h-14 w-14"
+                                                alt=""
+                                            />
                                         </div>
-                                        {filterUser.map((item) => {
-                                            return (
-                                            
-                                                    <div key={item.id}>
-                                                        <p className="font-bold text-sm absolute xl:static invisible xl:visible">
-                                                            {item.displayName}
-                                                        </p>
-                                                        <p className="text-sm absolute xl:static invisible xl:visible">
-                                                            @{item.userName}
-                                                        </p>
-                                                    </div>
-                                                
-                                            );
-                                        })}
+                                        <div>
+                                            <p className="font-bold text-sm absolute xl:static invisible xl:visible">
+                                                {data?.user.user_metadata.name ||
+                                                    "-"}
+                                            </p>
+                                            <p className="text-sm absolute xl:static invisible xl:visible opacity-60">
+                                                @
+                                                {data?.user.user_metadata
+                                                    .user_name || "-"}
+                                            </p>
+                                        </div>
                                         <div className="absolute xl:static invisible xl:visible">
                                             <svg
                                                 width="19"

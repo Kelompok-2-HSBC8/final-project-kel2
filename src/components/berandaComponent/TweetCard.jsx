@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 export default function TweetCard(props) {
     const {
         tweet,
@@ -8,6 +9,7 @@ export default function TweetCard(props) {
         totalComments,
         totalRetweets,
         totalShare,
+        date,
     } = props;
 
     return (
@@ -31,6 +33,9 @@ export default function TweetCard(props) {
                         {/* </a> */}
                         <span className="font-medium text-[#8899A6]">
                             @{userName}
+                        </span>
+                        <span className="font-medium text-[#8899A6]">
+                        ∙ {new Date(date).toLocaleDateString("en-US")}
                         </span>
                     </div>
 
@@ -158,3 +163,15 @@ export default function TweetCard(props) {
         </section>
     );
 }
+
+TweetCard.propTypes = {
+    tweet: PropTypes.string,
+    userName: PropTypes.string,
+    displayName: PropTypes.string,
+    avatar: PropTypes.string,
+    totalLikes: PropTypes.number,
+    totalComments: PropTypes.number,
+    totalRetweets: PropTypes.number,
+    totalShare: PropTypes.number,
+    date: PropTypes.string,
+};
