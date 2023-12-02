@@ -14,9 +14,6 @@ export default function Tweet({ data }) {
     } = data;
 
     const date = moment(createdAt).format("hh:mm a . D MMM YYYY");
-    console.log(date);
-
-    console.log(data);
     return (
         <div className="min-h-screen">
             <section className="tweet p-4 border-b border-slate-300">

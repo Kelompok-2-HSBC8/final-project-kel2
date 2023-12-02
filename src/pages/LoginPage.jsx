@@ -1,22 +1,39 @@
 // eslint-disable-next-line no-unused-vars
-import { useState } from "react";
-import ModalLogin from "../components/ModalLogin";
+import { useState, useEffect } from "react";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import auth from "../utils/auth";
+import supabase from "../services/supabase";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-    const [modal, setModal] = useState(false);
+    const [user, setUser] = useState(null);
 
-    const modalBTN = (e) => {
-        e.preventDefault();
-        setModal(true);
-    };
+    const navigate = useNavigate();
 
-    const closeModal = () => {
-        setModal(false);
+    const getUserData = async () => {
+        supabase.auth.onAuthStateChange((event) => {
+            if (event === "SIGNED_IN") {
+                navigate("/");
+            }
+        });
+        await supabase.auth.getUser().then((data) => {
+            if (data.data?.user) {
+                auth.storeAuthCredential(data.data.user.id);
+                setUser(data.data.user);
+                console.log(user);
+                navigate("/");
+            }
+        });
     };
+    useEffect(() => {
+        getUserData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>
-            <main className="flex flex-col-reverse min-[1017px]:flex-row">
+            <main className="flex flex-col-reverse min-[1017px]:flex-row min-h-screen">
                 <section className="w-full min-[1017px]:max-w-[50%] bg-[url('https://preview.redd.it/1ckh2h90ac371.png?width=640&crop=smart&auto=webp&s=704bfdc595df4aeacde8231572523a208a387197')] flex items-center justify-center -z-[99999999]">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -98,182 +115,36 @@ function LoginPage() {
                             Join today.
                         </h2>
 
-                        <div className="font-[400] mt-[30px]">
-                            <button
-                                type="email"
-                                className="border border-black w-[300px] rounded-3xl py-2 flex items-center justify-center space-x-2"
-                            >
-                                <svg
-                                    version="1.1"
-                                    xmlns="http://www.w3.org/2500/svg"
-                                    viewBox="0 0 48 48"
-                                    className="w-[15px] mr-2"
-                                >
-                                    <g>
-                                        <path
-                                            fill="#EA4335"
-                                            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-                                        ></path>
-                                        <path
-                                            fill="#4285F4"
-                                            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-                                        ></path>
-                                        <path
-                                            fill="#FBBC05"
-                                            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 25.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-                                        ></path>
-                                        <path
-                                            fill="#34A853"
-                                            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-                                        ></path>
-                                        <path
-                                            fill="none"
-                                            d="M0 0h48v48H0z"
-                                        ></path>
-                                    </g>
-                                </svg>
-                                Sign up with google
-                            </button>
-                        </div>
-
-                        <div className="font-[400] mt-[13px]">
-                            <button
-                                type="email"
-                                className="border border-[black] w-[300px] rounded-3xl py-2 flex items-center justify-center space-x-2"
-                            >
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    aria-hidden="true"
-                                    className="w-[20px] mr-2"
-                                    style={{ color: " rgb(15, 25, 25)" }}
-                                >
-                                    <g>
-                                        <path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.256-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z"></path>
-                                    </g>
-                                </svg>
-                                Sign up with apple
-                            </button>
-                            <div className="flex items-center my-[10px]">
-                                <hr className="h-[0.5px] w-[130px]" />
-                                <div className="mx-[10px]">or</div>
-                                <hr className="h-[0.5px] w-[130px]" />
-                            </div>
-                            <button
-                                type="email"
-                                className="bg-sky-500 hover:bg-sky-600 w-[300px] text-white rounded-3xl py-2 flex items-center justify-center space-x-2"
-                            >
-                                Create account
-                            </button>
-                            <div className="font-[300] text-[grey] text-[12px] max-w-[300px] h-[80px] mt-[5px]">
-                                By signing up, you agree to the
-                                <a
-                                    href="#"
-                                    className="text-[#1D9bf0] hover:underline"
-                                >
-                                    Terms of Service
-                                </a>
-                                and
-                                <a
-                                    href="#"
-                                    className="text-[#1D9bf0] hover:underline"
-                                >
-                                    Privacy Policy
-                                </a>
-                                , including
-                                <a
-                                    href="#"
-                                    className="text-[#1D9bf0] hover:underline"
-                                >
-                                    Cookie Use.
-                                </a>
-                            </div>
-                            <h4 className="mt-[0.5rem] font-[500]">
-                                Already have an account?
-                            </h4>
-                            <button
-                                onClick={modalBTN}
-                                className="border border-blue-400 w-[300px] text-[#1D9bf0] rounded-3xl py-2 mt-5 flex items-center justify-center space-x-2 hover:bg-sky-500/[0.1]"
-                            >
-                                Sign in
-                            </button>
-
-                            {modal && <ModalLogin closeModal={closeModal} />}
+                        <div className="font-[400] mt-[10px]">
+                            <Auth
+                                supabaseClient={supabase}
+                                appearance={{
+                                    theme: ThemeSupa,
+                                    style: {
+                                        input: {
+                                            borderRadius: "0.8rem",
+                                        },
+                                        button: {
+                                            borderRadius: "0.8rem",
+                                        },
+                                    },
+                                    variables: {
+                                        default: {
+                                            colors: {
+                                                brand: "#00acee",
+                                                brandAccent: "#00acee",
+                                                brandButtonText: "grey",
+                                            },
+                                        },
+                                    },
+                                }}
+                                theme="light"
+                                providers={["google", "github"]}
+                            />
                         </div>
                     </div>
                 </section>
             </main>
-
-            <footer className="h-full mb-6 flex flex-wrap justify-center text-[grey] text-[13px] md:px-2">
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    About{" "}
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Help Center
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Terms of Service
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Privacy Policy
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Cookie Policy
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Accessibility
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Ads info
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Blog
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Status
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Careers
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Brand Resources
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Advertising
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Marketing
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    X for Business
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Developers
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Directory
-                </a>
-                <a href="" className="mx-[6px] mt-2 hover:underline">
-                    {" "}
-                    Settings
-                </a>
-                <p className="mx-[6px] mt-2">© 2023 twitter Corp.</p>
-            </footer>
         </>
     );
 }

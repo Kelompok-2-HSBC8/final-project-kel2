@@ -35,16 +35,26 @@ function BerandaPage() {
                 {data.map((tweet) => {
                     return (
                         <li key={tweet.id}>
-                            <Link to={`/tweet/${tweet.id}`}>
+                            <Link to={`/tweet/${tweet?.id}`}>
                                 <TweetCard
-                                    tweet={tweet.bodyTweet}
-                                    userName={tweet.userName}
-                                    displayName={tweet.displayName}
-                                    avatar={tweet.avatar}
-                                    totalLikes={tweet.totalLike}
-                                    totalComments={tweet.totalComment}
-                                    totalRetweets={tweet.totalRetweet}
-                                    totalShare={tweet.totalShare}
+                                    tweet={tweet?.content}
+                                    userName={
+                                        tweet?.postedBy?.raw_user_meta_data
+                                            .user_name ??
+                                        tweet?.postedBy?.raw_user_meta_data.name
+                                    }
+                                    displayName={
+                                        tweet?.postedBy?.raw_user_meta_data.name
+                                    }
+                                    avatar={
+                                        tweet?.postedBy?.raw_user_meta_data
+                                            .picture
+                                    }
+                                    totalLikes={tweet.likesBy.length}
+                                    totalComments={tweet.commentBy.length}
+                                    totalRetweets={tweet.retweetBy.length}
+                                    totalShare={tweet.shareBy.length}
+                                    date={tweet.createdAt}
                                 />
                             </Link>
                         </li>

@@ -1,7 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
 import { useEffect } from "react";
-import { fetchUser } from "../redux/slices/user";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
@@ -12,8 +10,8 @@ function ProfilePage() {
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(fetchUser());
-    }, [dispatch]);
+        console.log(console.log(data));
+    }, [data]);
     const navigate = useNavigate();
 
     if (loading) {
