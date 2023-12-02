@@ -32,7 +32,7 @@ function TweetPage() {
     return (
         <>
             <Header value="Postingan" />
-            <Tweet data={tweet} />
+            <Tweet data={tweet.data} />
         </>
     );
 }

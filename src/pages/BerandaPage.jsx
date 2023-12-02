@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchTweets } from "../redux/slices/tweet";
 import { useSelector, useDispatch } from "react-redux";
 import TweetCard from "../components/berandaComponent/TweetCard";
@@ -8,11 +8,16 @@ import Header from "../components/Header";
 import Loading from "../components/Loading";
 
 function BerandaPage() {
+    const [isRefresh, setIsRefresh] = useState(false);
     const { data, loading } = useSelector((state) => state.tweet);
     const dispatch = useDispatch();
     useEffect(() => {
+        if (isRefresh) {
+            dispatch(fetchTweets());
+            setIsRefresh(false);
+        }
         dispatch(fetchTweets());
-    }, [dispatch]);
+    }, [dispatch, isRefresh]);
 
     if (loading) {
         return (
@@ -29,7 +34,7 @@ function BerandaPage() {
     return (
         <>
             <Header value="Home" />
-            <TweetPost />
+            <TweetPost isRefresh={setIsRefresh} />
 
             <ul>
                 {data.map((tweet) => {

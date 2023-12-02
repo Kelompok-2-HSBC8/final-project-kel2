@@ -260,20 +260,27 @@ function MainLayout({ children }) {
                                     >
                                         <div className="mr-4">
                                             <img
-                                                src={data?.user.user_metadata.avatar_url}
+                                                src={
+                                                    data?.user.user_metadata
+                                                        .avatar_url
+                                                }
                                                 className="rounded-full h-14 w-14"
                                                 alt=""
                                             />
                                         </div>
                                         <div>
                                             <p className="font-bold text-sm absolute xl:static invisible xl:visible">
-                                                {data?.user.user_metadata.name ||
-                                                    "-"}
+                                                {data?.user.user_metadata
+                                                    .name || "-"}
                                             </p>
                                             <p className="text-sm absolute xl:static invisible xl:visible opacity-60">
                                                 @
                                                 {data?.user.user_metadata
-                                                    .user_name || "-"}
+                                                    .user_name ||
+                                                    data?.user.user_metadata.name
+                                                        .toLowerCase()
+                                                        .split(" ")
+                                                        .join("")}
                                             </p>
                                         </div>
                                         <div className="absolute xl:static invisible xl:visible">
