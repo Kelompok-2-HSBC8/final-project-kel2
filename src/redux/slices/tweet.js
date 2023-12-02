@@ -1,18 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-const BASE_TWEET_URL =
-    "https://64fe9394f8b9eeca9e28d2eb.mockapi.io/api/v1/tweet";
+import { getTweet } from "../../services/tweet";
 
 const initialState = {
     loading: false,
     data: [],
-    eror : ''
+    eror: "",
 };
 
 export const fetchTweets = createAsyncThunk("tweet/fetchTweet", async () => {
     try {
-        const data = await axios.get(BASE_TWEET_URL);
-        return { data: data.data };
+        const response = await getTweet();
+        if (response) {
+            return { data: response.data.data };
+        }
     } catch (e) {
         console.log(e);
     }
@@ -35,11 +35,11 @@ const tweetSlice = createSlice({
             state.loading = false;
             state.data = action.payload.data;
         });
-        builder.addCase(fetchTweets.rejected, (state,action) => {
+        builder.addCase(fetchTweets.rejected, (state, action) => {
             state.loading = false;
             state.data = [];
-            state.eror = action.error.message
-        })
+            state.eror = action.error.message;
+        });
     },
 });
 

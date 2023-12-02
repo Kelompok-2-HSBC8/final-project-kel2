@@ -1,8 +1,16 @@
 export default function TweetPost() {
+    const data = JSON.parse(
+        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+    );
+    console.log(data.user.id);
     return (
         <section className="post p-4 flex border-b border-slate-300 mb-3">
             <div className="profile-picture mr-4">
-                <img src="./pp.svg" alt="" className="rounded-full w-14" />
+                <img
+                    src={data?.user?.user_metadata?.avatar_url || "-"}
+                    alt=""
+                    className="rounded-full w-14"
+                />
             </div>
             <div className="w-full">
                 <textarea

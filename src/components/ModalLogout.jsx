@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
 import auth from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import supabase from "../services/supabase";
 
 function ModalLogout({ cancelLogout }) {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         auth.logout();
+        await supabase.auth.signOut();
         navigate("/login");
     };
 
