@@ -97,7 +97,7 @@ function ModalPost({ cancelPost }) {
 }
 
 ModalPost.propTypes = {
-    cancelLogout: PropTypes.func.isRequired,
+    cancelPost: PropTypes.func.isRequired,
 };
 
 export default ModalPost;

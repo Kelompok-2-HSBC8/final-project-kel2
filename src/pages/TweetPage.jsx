@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // Import useParams
-import { useSelector, useDispatch } from "react-redux";
-import { fetchTweets } from "../redux/slices/tweet";
+
 import Header from "../components/Header";
 import Tweet from "../components/tweetPageComponent/Tweet";
 import Loading from "../components/Loading";
