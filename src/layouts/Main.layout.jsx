@@ -1,23 +1,54 @@
 // eslint-disable-next-line no-unused-vars
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
+import ModalPost from "../components/ModalPost";
 import ModalLogout from "../components/ModalLogout";
-import { useSelector, useDispatch } from "react-redux";
 
 function MainLayout({ children }) {
-    const [open, setOpen] = useState(false);
-    const openModal = () => {
-        setOpen(true);
+    const [openPostModal, setOpenPostModal] = useState(false);
+    const [active, setActive] = useState();
+    const path = window.location.pathname;
+    const [openLogoutModal, setOpenLogoutModal] = useState(false);
+
+    const openPost = () => {
+        setOpenPostModal(true);
+        setOpenLogoutModal(false);
+    };
+
+    const openLogout = () => {
+        setOpenLogoutModal(true);
+        setOpenPostModal(false);
     };
 
     const cancelLogout = () => {
-        setOpen(false);
+        setOpenLogoutModal(false);
     };
 
+    const cancelPost = () => {
+        setOpenPostModal(false);
+    };
+
+    useEffect(() => {
+        if (path === "/") {
+            setActive("Beranda");
+        } else if (path === "/trend") {
+            setActive("Trend");
+        } else if (path === "/notifikasi") {
+            setActive("Notifikasi");
+        } else if (path === "/chat") {
+            setActive("Chat");
+        } else if (path === "/profile") {
+            setActive("Profile");
+        }
+    }, [path]);
+
     const data = JSON.parse(
-        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
+            JSON.parse(
+                localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+            )
     );
     return (
         <div className="grid grid-cols-12 w-auto box-border">
@@ -71,10 +102,15 @@ function MainLayout({ children }) {
 
                             <div className="flex-col">
                                 <ul className="text-xl">
-                                    <li>
+                                    <li className="mb-1">
                                         <NavLink
-                                            className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
+                                            className={`relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full ${
+                                                active === "Beranda"
+                                                    ? "bg-gray-200"
+                                                    : "bg-white"
+                                            } hover:bg-gray-200 flex flex-wrap`}
                                             to={"/"}
+                                            onClick={() => setActive("Beranda")}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -103,10 +139,15 @@ function MainLayout({ children }) {
                                             </span>
                                         </NavLink>
                                     </li>
-                                    <li>
+                                    <li className="mb-1">
                                         <NavLink
-                                            className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
+                                            className={`relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full ${
+                                                active === "Trend"
+                                                    ? "bg-gray-200"
+                                                    : "bg-white"
+                                            } hover:bg-gray-200 flex flex-wrap`}
                                             to={"/trend"}
+                                            onClick={() => setActive("Trend")}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -130,10 +171,17 @@ function MainLayout({ children }) {
                                             </span>
                                         </NavLink>
                                     </li>
-                                    <li>
+                                    <li className="mb-1">
                                         <NavLink
-                                            className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
+                                            className={`relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full ${
+                                                active === "Notifikasi"
+                                                    ? "bg-gray-200"
+                                                    : "bg-white"
+                                            } hover:bg-gray-200 flex flex-wrap`}
                                             to={"/notifikasi"}
+                                            onClick={() =>
+                                                setActive("Notifikasi")
+                                            }
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -157,10 +205,15 @@ function MainLayout({ children }) {
                                             </span>
                                         </NavLink>
                                     </li>
-                                    <li>
+                                    <li className="mb-1">
                                         <NavLink
-                                            className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
+                                            className={`relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full ${
+                                                active === "Chat"
+                                                    ? "bg-gray-200"
+                                                    : "bg-white"
+                                            } hover:bg-gray-200 flex flex-wrap`}
                                             to={"/chat"}
+                                            onClick={() => setActive("Chat")}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -184,10 +237,15 @@ function MainLayout({ children }) {
                                             </span>
                                         </NavLink>
                                     </li>
-                                    <li>
+                                    <li className="mb-1">
                                         <NavLink
-                                            className="relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full bg-white hover:bg-gray-200 flex flex-wrap"
+                                            className={`relative h-16 w-16 xl:w-64 items-center justify-center xl:justify-start rounded-full ${
+                                                active === "Profile"
+                                                    ? "bg-gray-200"
+                                                    : "bg-white"
+                                            } hover:bg-gray-200 flex flex-wrap`}
                                             to={"/profile"}
+                                            onClick={() => setActive("Profile")}
                                         >
                                             <div className="px-5">
                                                 <svg
@@ -217,9 +275,9 @@ function MainLayout({ children }) {
                             <div className="py-6">
                                 <ul>
                                     <li>
-                                        <a
+                                        <button
                                             className="relative h-16 w-16 xl:w-64 items-center rounded-full bg-sky-500 hover:bg-sky-600 flex text-white font-bold xl:justify-center"
-                                            href="#"
+                                            onClick={openPost}
                                         >
                                             <div>
                                                 <svg
@@ -245,7 +303,12 @@ function MainLayout({ children }) {
                                             <span className="invisible xl:visible text-xl absolute xl:static">
                                                 Posting
                                             </span>
-                                        </a>
+                                        </button>
+                                        {openPostModal && (
+                                            <ModalPost
+                                                cancelPost={cancelPost}
+                                            />
+                                        )}
                                     </li>
                                 </ul>
                             </div>
@@ -256,7 +319,7 @@ function MainLayout({ children }) {
                                 <li>
                                     <button
                                         className="relative justify-center h-16 w-16 xl:w-64 xl:px-3 items-center rounded-full hover:bg-gray-200 flex xl:justify-between"
-                                        onClick={openModal}
+                                        onClick={openLogout}
                                     >
                                         <div className="mr-4">
                                             <img
@@ -301,7 +364,7 @@ function MainLayout({ children }) {
                                             </svg>
                                         </div>
                                     </button>
-                                    {open && (
+                                    {openLogoutModal && (
                                         <ModalLogout
                                             cancelLogout={cancelLogout}
                                         />
@@ -325,504 +388,508 @@ function MainLayout({ children }) {
                         </div>
                     </main>
 
-                    <section className="invisible lg:visible absolute lg:static lg:col-span-5">
-                        <div className="flex flex-col m-auto box-border items-center justify-center">
-                            <button className="flex flex-row g-sky-500 mt-4 group bg-slate-200 rounded-[50px] w-[350px] mx-6 sticky top-0 border-y focus:ring-2 focus:ring-sky-500 focus:border-sky-500">
-                                <svg
-                                    className="ml-3 mt-3 group-focus:stroke-sky-600 group-hover:stroke-sky-500"
-                                    width="17"
-                                    height="17"
-                                    viewBox="0 0 17 17"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M16.0446 15.2054L13.1471 12.3079C14.1961 11.065 14.8334 9.46108 14.8334 7.70833C14.8334 3.77375 11.643 0.583328 7.70837 0.583328C3.77379 0.583328 0.583374 3.77375 0.583374 7.70833C0.583374 11.6429 3.77379 14.8333 7.70837 14.8333C9.46192 14.8333 11.065 14.1968 12.3064 13.1471L15.2039 16.0446C15.3202 16.1602 15.473 16.2187 15.6235 16.2187C15.7739 16.2187 15.9282 16.161 16.043 16.0446C16.2766 15.8126 16.2766 15.4374 16.0446 15.2054ZM1.77087 7.70833C1.77087 4.43479 4.43483 1.77083 7.70837 1.77083C10.9819 1.77083 13.6459 4.43479 13.6459 7.70833C13.6459 10.9819 10.9819 13.6458 7.70837 13.6458C4.43483 13.6458 1.77087 10.9819 1.77087 7.70833Z"
-                                        fill="#5B7083"
+                    { active !== 'Chat' &&
+                        <section className="invisible lg:visible absolute lg:static lg:col-span-5">
+                            <div className="flex flex-col m-auto box-border items-center justify-center">
+                                <button className="flex flex-row g-sky-500 mt-4 group bg-slate-200 rounded-[50px] w-[350px] mx-6 sticky top-0 border-y focus:ring-2 focus:ring-sky-500 focus:border-sky-500">
+                                    <svg
+                                        className="ml-3 mt-3 group-focus:stroke-sky-600 group-hover:stroke-sky-500"
+                                        width="17"
+                                        height="17"
+                                        viewBox="0 0 17 17"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M16.0446 15.2054L13.1471 12.3079C14.1961 11.065 14.8334 9.46108 14.8334 7.70833C14.8334 3.77375 11.643 0.583328 7.70837 0.583328C3.77379 0.583328 0.583374 3.77375 0.583374 7.70833C0.583374 11.6429 3.77379 14.8333 7.70837 14.8333C9.46192 14.8333 11.065 14.1968 12.3064 13.1471L15.2039 16.0446C15.3202 16.1602 15.473 16.2187 15.6235 16.2187C15.7739 16.2187 15.9282 16.161 16.043 16.0446C16.2766 15.8126 16.2766 15.4374 16.0446 15.2054ZM1.77087 7.70833C1.77087 4.43479 4.43483 1.77083 7.70837 1.77083C10.9819 1.77083 13.6459 4.43479 13.6459 7.70833C13.6459 10.9819 10.9819 13.6458 7.70837 13.6458C4.43483 13.6458 1.77087 10.9819 1.77087 7.70833Z"
+                                            fill="#5B7083"
+                                        />
+                                    </svg>
+                                    <input
+                                        id="searchinput"
+                                        className="bg-slate-200 pl-4 w-full h-[39px] focus:outline-none rounded-[50px] outline-none border-none focus:ring-0"
+                                        type="search"
+                                        placeholder="Search"
                                     />
-                                </svg>
-                                <input
-                                    id="searchinput"
-                                    className="bg-slate-200 pl-4 w-full h-[39px] focus:outline-none rounded-[50px] outline-none border-none focus:ring-0"
-                                    type="search"
-                                    placeholder="Search"
-                                />
-                            </button>
+                                </button>
 
-                            <div className="flex flex-col w-[350px] rounded-[16px] bg-[#F7F9FA] mt-2 pt-3">
-                                <h1 className="font-bold text-[20px] p-5">
-                                    Trends for you
-                                </h1>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Trending in Indonesia
-                                            </p>
-                                            <h2 className="text-[15px] font-bold">
-                                                Luffy
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                40K posts
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
+                                <div className="flex flex-col w-[350px] rounded-[16px] bg-[#F7F9FA] mt-2 pt-3">
+                                    <h1 className="font-bold text-[20px] p-5">
+                                        Trends for you
+                                    </h1>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
                                         >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <h2 className="text-[15px] font-bold">
-                                                #ONEPIECENETFLIX👒
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Kru Topi Jerami Siap Berangkat
-                                            </p>
-                                            <p className="text-[12px] text-[#5B7083]">
-                                                Promoted by Netflix Indonesia
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Televesion Trending
-                                            </p>
-                                            <h2 className="text-[15px] font-bold">
-                                                #OnePieceLiveAction👒
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                47.9K posts
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Trending in Indonesia
-                                            </p>
-                                            <h2 className="text-[15px] font-bold">
-                                                SuperBlueMoon
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                44K posts
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Trending
-                                            </p>
-                                            <h2 className="text-[15px] font-bold">
-                                                Waduh
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                8,414K posts
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Sports Trending
-                                            </p>
-                                            <h2 className="text-[15px] font-bold">
-                                                Barca
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                86K posts
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Only on Twitter Trending
-                                            </p>
-                                            <h2 className="text-[15px] font-bold">
-                                                #제로베이스원
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                107K posts
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 h-[100px] p-5">
-                                    <a
-                                        className="flex flex-wrap justify-between items-center"
-                                        href=""
-                                    >
-                                        <div>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                Music Trending
-                                            </p>
-                                            <h2 className="text-[15px] font-bold">
-                                                #Hindia
-                                            </h2>
-                                            <p className="text-[14px] text-[#5B7083]">
-                                                10K posts
-                                            </p>
-                                        </div>
-                                        <svg
-                                            className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="black"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                            <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                            ></circle>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="hover:bg-slate-200 p-5 cursor-pointer">
-                                    <a className="text-sky-500" href="">
-                                        Show More
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col w-[350px] bg-[#F7F9FA] mt-4 rounded-[15px]">
-                                <h1 className="text-[20px] font-bold mb-3 ml-7 mt-3">
-                                    Who To Follow
-                                </h1>
-                                <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px]">
-                                    <div className="mx-auto flex my-auto">
-                                        <img
-                                            className="h-[45px] w-[45px] rounded-full"
-                                            src="./harisenin.jpg"
-                                            alt=""
-                                        />
-                                        <div className="ml-3 my-auto">
-                                            <a
-                                                className="font-bold hover:underline"
-                                                href=""
+                                            <div>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Trending in Indonesia
+                                                </p>
+                                                <h2 className="text-[15px] font-bold">
+                                                    Luffy
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    40K posts
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                             >
-                                                harisenin.com
-                                            </a>
-                                            <p className="text-slate-500">
-                                                @harisenin
-                                            </p>
-                                        </div>
-                                        <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
-                                            Follow
-                                        </button>
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
+                                        >
+                                            <div>
+                                                <h2 className="text-[15px] font-bold">
+                                                    #ONEPIECENETFLIX👒
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Kru Topi Jerami Siap
+                                                    Berangkat
+                                                </p>
+                                                <p className="text-[12px] text-[#5B7083]">
+                                                    Promoted by Netflix
+                                                    Indonesia
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
+                                        >
+                                            <div>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Televesion Trending
+                                                </p>
+                                                <h2 className="text-[15px] font-bold">
+                                                    #OnePieceLiveAction👒
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    47.9K posts
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
+                                        >
+                                            <div>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Trending in Indonesia
+                                                </p>
+                                                <h2 className="text-[15px] font-bold">
+                                                    SuperBlueMoon
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    44K posts
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
+                                        >
+                                            <div>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Trending
+                                                </p>
+                                                <h2 className="text-[15px] font-bold">
+                                                    Waduh
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    8,414K posts
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
+                                        >
+                                            <div>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Sports Trending
+                                                </p>
+                                                <h2 className="text-[15px] font-bold">
+                                                    Barca
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    86K posts
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
+                                        >
+                                            <div>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Only on Twitter Trending
+                                                </p>
+                                                <h2 className="text-[15px] font-bold">
+                                                    #제로베이스원
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    107K posts
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 h-[100px] p-5">
+                                        <a
+                                            className="flex flex-wrap justify-between items-center"
+                                            href=""
+                                        >
+                                            <div>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    Music Trending
+                                                </p>
+                                                <h2 className="text-[15px] font-bold">
+                                                    #Hindia
+                                                </h2>
+                                                <p className="text-[14px] text-[#5B7083]">
+                                                    10K posts
+                                                </p>
+                                            </div>
+                                            <svg
+                                                className="left-[300px] hover:bg-sky-50 hover:rounded-full hover:stroke-blue-500 transition"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="black"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="19"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                                <circle
+                                                    cx="5"
+                                                    cy="12"
+                                                    r="1"
+                                                ></circle>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="hover:bg-slate-200 p-5 cursor-pointer">
+                                        <a className="text-sky-500" href="">
+                                            Show More
+                                        </a>
                                     </div>
                                 </div>
-                                <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px]">
-                                    <div className="mx-auto flex my-auto">
-                                        <img
-                                            className="h-[45px] w-[45px] rounded-full"
-                                            src="./harisenin.jpg"
-                                            alt=""
-                                        />
-                                        <div className="ml-3">
-                                            <a
-                                                className="font-bold hover:underline"
-                                                href=""
-                                            >
-                                                harisenin.com
-                                            </a>
-                                            <p className="text-slate-500">
-                                                @harisenin
-                                            </p>
-                                        </div>
-                                        <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
-                                            Follow
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px] my-auto">
-                                    <div className="mx-auto flex my-auto">
-                                        <img
-                                            className="h-[45px] w-[45px] rounded-full"
-                                            src="./harisenin.jpg"
-                                            alt=""
-                                        />
-                                        <div className="ml-3">
-                                            <a
-                                                className="font-bold hover:underline"
-                                                href=""
-                                            >
-                                                harisenin.com
-                                            </a>
-                                            <p className="text-slate-500">
-                                                @harisenin
-                                            </p>
-                                        </div>
-                                        <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
-                                            Follow
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="cursor-pointer hover:bg-slate-200 p-5">
-                                    <a className="text-sky-500" href="">
-                                        Show More
-                                    </a>
-                                </div>
-                            </div>
 
-                            <div className="flex flex-col text-slate-500 text-[14px] w-[350px] mx-auto mt-2">
-                                <div className="flex gap-2 mb-1">
-                                    <a href="">Terms of Services</a>
-                                    <a href="">privacy policy</a>
-                                    <a href=""> Cookie Policy</a>
+                                <div className="flex flex-col w-[350px] bg-[#F7F9FA] mt-4 rounded-[15px]">
+                                    <h1 className="text-[20px] font-bold mb-3 ml-7 mt-3">
+                                        Who To Follow
+                                    </h1>
+                                    <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px]">
+                                        <div className="mx-auto flex my-auto">
+                                            <img
+                                                className="h-[45px] w-[45px] rounded-full"
+                                                src="./harisenin.jpg"
+                                                alt=""
+                                            />
+                                            <div className="ml-3 my-auto">
+                                                <a
+                                                    className="font-bold hover:underline"
+                                                    href=""
+                                                >
+                                                    harisenin.com
+                                                </a>
+                                                <p className="text-slate-500">
+                                                    @harisenin
+                                                </p>
+                                            </div>
+                                            <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
+                                                Follow
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px]">
+                                        <div className="mx-auto flex my-auto">
+                                            <img
+                                                className="h-[45px] w-[45px] rounded-full"
+                                                src="./harisenin.jpg"
+                                                alt=""
+                                            />
+                                            <div className="ml-3">
+                                                <a
+                                                    className="font-bold hover:underline"
+                                                    href=""
+                                                >
+                                                    harisenin.com
+                                                </a>
+                                                <p className="text-slate-500">
+                                                    @harisenin
+                                                </p>
+                                            </div>
+                                            <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
+                                                Follow
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px] my-auto">
+                                        <div className="mx-auto flex my-auto">
+                                            <img
+                                                className="h-[45px] w-[45px] rounded-full"
+                                                src="./harisenin.jpg"
+                                                alt=""
+                                            />
+                                            <div className="ml-3">
+                                                <a
+                                                    className="font-bold hover:underline"
+                                                    href=""
+                                                >
+                                                    harisenin.com
+                                                </a>
+                                                <p className="text-slate-500">
+                                                    @harisenin
+                                                </p>
+                                            </div>
+                                            <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
+                                                Follow
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="cursor-pointer hover:bg-slate-200 p-5">
+                                        <a className="text-sky-500" href="">
+                                            Show More
+                                        </a>
+                                    </div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <a href="">Accessibility</a>
-                                    <a href="">Ads Info</a>
-                                    <a href="">More</a>
-                                    <a href="">&copy;2023 X Crop.</a>
+
+                                <div className="flex flex-col text-slate-500 text-[14px] w-[350px] mx-auto mt-2">
+                                    <div className="flex gap-2 mb-1">
+                                        <a href="">Terms of Services</a>
+                                        <a href="">privacy policy</a>
+                                        <a href=""> Cookie Policy</a>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <a href="">Accessibility</a>
+                                        <a href="">Ads Info</a>
+                                        <a href="">More</a>
+                                        <a href="">&copy;2023 X Crop.</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
+                    }
                 </div>
             </div>
         </div>

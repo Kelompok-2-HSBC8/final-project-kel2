@@ -3,10 +3,11 @@ import { createTweet } from "../../services/tweet";
 import PropTypes from "prop-types";
 export default function TweetPost({ isRefresh }) {
     const [content, setContent] = useState("");
+    const [valid, setValid] = useState(false);
     const data = JSON.parse(
-        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
+        JSON.parse(localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token"))
     );
-    console.log(data.user.id);
 
     const handleSubmit = async () => {
         try {
@@ -22,6 +23,11 @@ export default function TweetPost({ isRefresh }) {
 
     const handleContent = (e) => {
         setContent(e.target.value);
+        if (e.target.value.length !== 0) {
+            setValid(true);
+        } else {
+            setValid(false);
+        }
     };
     return (
         <section className="post p-4 flex border-b border-slate-300 mb-3">
@@ -72,7 +78,11 @@ export default function TweetPost({ isRefresh }) {
                     </div>
                     <div>
                         <button
-                            className="bg-sky-500 hover:bg-sky-600 rounded-full w-20 h-8 font-bold text-white"
+                            className={`${
+                                valid
+                                    ? "bg-sky-500 hover:bg-sky-600"
+                                    : "bg-sky-300"
+                            }  rounded-full w-20 h-8 font-bold text-white`}
                             onClick={handleSubmit}
                         >
                             Post
@@ -85,5 +95,5 @@ export default function TweetPost({ isRefresh }) {
 }
 
 TweetPost.propTypes = {
-    isRefresh: PropTypes.bool,
+    isRefresh: PropTypes.func,
 };
