@@ -1,6 +1,26 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMessage } from "../redux/slices/message";
+import Loading from "../components/Loading";
+import MessageCard from "../components/messageComponent/MessageCard";
+
 function ChatPage() {
-    return (
-        <>
+    const [search, setSearch] = useState("");
+    const { data, loading } = useSelector((state) => state.message);
+    const filteredMessage = data.filter((message) =>
+        message?.sender?.raw_user_meta_data?.name.toLowerCase().includes(search.toLowerCase())
+    );
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(fetchMessage());
+    }, [dispatch]);
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value);
+    };
+
+    if (loading) {
+        return (
             <div className="w-auto h-screen box-border border-x-2 py-6">
                 <div className="flex justify-between px-3">
                     <p className="text-xl font-bold">Pesan</p>
@@ -25,69 +45,64 @@ function ChatPage() {
                         className="rounded-full w-full px-6 py-3 border-2 focus:outline-cyan-500 text-center"
                         type="text"
                         placeholder="Cari Direct Message"
+                        onChange={handleSearch}
                     />
                 </div>
-
-                <div>
-                    <ul>
-                        <li>
-                            <a
-                                className="relative justify-center h-16 px-4 w-full items-center hover:bg-gray-200 flex xl:justify-between"
-                                href="#"
-                            >
-                                <div className="flex justify-start gap-3">
-                                    <img
-                                        className="w-10 rounded-full bg-sky-500 align-baseline"
-                                        src="./tw-cus.svg"
-                                        alt="foto profile"
-                                    />
-                                    <div>
-                                        <p className="font-bold text-sm pr-9">
-                                            HSBC8 Kelompok 1
-                                        </p>
-                                        <p className="text-sm pr-8 truncate w-48">
-                                            Lorem ipsum dolor sit amet
-                                            consectetur adipisicing elit.
-                                            Itaque, harum!
-                                        </p>
-                                    </div>
-                                </div>
-                                <button className="rounded-full px-1 py-3 hover:bg-slate-300">
-                                    <img src="./Group.svg" alt="profile-opsi" />
-                                </button>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                className="relative justify-center h-16 px-4 w-full items-center hover:bg-gray-200 flex xl:justify-between"
-                                href="#"
-                            >
-                                <div className="flex justify-start gap-3">
-                                    <img
-                                        className="w-10 rounded-full bg-sky-500 align-baseline"
-                                        src="./tw-cus.svg"
-                                        alt="foto profile"
-                                    />
-                                    <div>
-                                        <p className="font-bold text-sm pr-9">
-                                            HSBC8 Kelompok 3
-                                        </p>
-                                        <p className="text-sm pr-8 truncate w-48">
-                                            Lorem ipsum dolor sit amet
-                                            consectetur adipisicing elit.
-                                            Itaque, harum!
-                                        </p>
-                                    </div>
-                                </div>
-                                <button className="rounded-full px-1 py-3 hover:bg-slate-300">
-                                    <img src="./Group.svg" alt="profile-opsi" />
-                                </button>
-                            </a>
-                        </li>
-                    </ul>
+                <div className="flex justify-center items-center">
+                    <Loading />
                 </div>
             </div>
-        </>
+        );
+    }
+    return (
+        <div className="w-auto h-screen box-border border-x-2 py-6">
+            <div className="flex justify-between px-3">
+                <p className="text-xl font-bold">Pesan</p>
+                <div className="flex gap-2">
+                    <button className="hover:bg-gray-200 p-1 rounded-full">
+                        <img src="./settings-svgrepo-com.svg" alt="Settings" />
+                    </button>
+                    <button className="hover:bg-gray-200 p-1 rounded-full">
+                        <img src="./mail-plus-svgrepo-com.svg" alt="Massage" />
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex px-2 py-5 justify-center">
+                <input
+                    className="rounded-full w-full px-6 py-3 border-2 focus:outline-cyan-500 text-center"
+                    type="text"
+                    placeholder="Cari Direct Message"
+                    onChange={handleSearch}
+                />
+            </div>
+
+            <div>
+                <ul>
+                    {filteredMessage.map((message) => {
+                        const chatLastIndex = message?.chat?.length - 1;
+
+                        return (
+                            <li key={message.id}>
+                                <MessageCard
+                                    avatar={
+                                        message?.sender?.raw_user_meta_data
+                                            ?.avatar_url
+                                    }
+                                    name={
+                                        message?.sender?.raw_user_meta_data
+                                            ?.name
+                                    }
+                                    lastChat={
+                                        message?.chat[chatLastIndex]?.content
+                                    }
+                                />
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
+        </div>
     );
 }
 
