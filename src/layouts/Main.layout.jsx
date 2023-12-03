@@ -3,18 +3,31 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
+import ModalPost from "../components/ModalPost";
 import ModalLogout from "../components/ModalLogout";
 
 function MainLayout({ children }) {
-    const [open, setOpen] = useState(false);
+    const [openPostModal, setOpenPostModal] = useState(false);
     const [active, setActive] = useState();
     const path = window.location.pathname;
-    const openModal = () => {
-        setOpen(true);
+    const [openLogoutModal, setOpenLogoutModal] = useState(false);
+
+    const openPost = () => {
+        setOpenPostModal(true);
+        setOpenLogoutModal(false);
+    };
+
+    const openLogout = () => {
+        setOpenLogoutModal(true);
+        setOpenPostModal(false);
     };
 
     const cancelLogout = () => {
-        setOpen(false);
+        setOpenLogoutModal(false);
+    };
+
+    const cancelPost = () => {
+        setOpenPostModal(false);
     };
 
     useEffect(() => {
@@ -262,9 +275,9 @@ function MainLayout({ children }) {
                             <div className="py-6">
                                 <ul>
                                     <li>
-                                        <a
+                                        <button
                                             className="relative h-16 w-16 xl:w-64 items-center rounded-full bg-sky-500 hover:bg-sky-600 flex text-white font-bold xl:justify-center"
-                                            href="#"
+                                            onClick={openPost}
                                         >
                                             <div>
                                                 <svg
@@ -290,7 +303,12 @@ function MainLayout({ children }) {
                                             <span className="invisible xl:visible text-xl absolute xl:static">
                                                 Posting
                                             </span>
-                                        </a>
+                                        </button>
+                                        {openPostModal && (
+                                            <ModalPost
+                                                cancelPost={cancelPost}
+                                            />
+                                        )}
                                     </li>
                                 </ul>
                             </div>
@@ -301,7 +319,7 @@ function MainLayout({ children }) {
                                 <li>
                                     <button
                                         className="relative justify-center h-16 w-16 xl:w-64 xl:px-3 items-center rounded-full hover:bg-gray-200 flex xl:justify-between"
-                                        onClick={openModal}
+                                        onClick={openLogout}
                                     >
                                         <div className="mr-4">
                                             <img
@@ -346,7 +364,7 @@ function MainLayout({ children }) {
                                             </svg>
                                         </div>
                                     </button>
-                                    {open && (
+                                    {openLogoutModal && (
                                         <ModalLogout
                                             cancelLogout={cancelLogout}
                                         />
