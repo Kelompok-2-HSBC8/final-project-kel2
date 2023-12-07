@@ -1,15 +1,26 @@
 // eslint-disable-next-line no-unused-vars
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
+import ModalEditProfile from "../components/ModalEditProfile";
 
 function ProfilePage() {
     const navigate = useNavigate();
+    const [openModal, setOpenModal] = useState(false);
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
             JSON.parse(
                 localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
             )
     );
+
+    const modalHandler = () => {
+        setOpenModal(true);
+    };
+
+    const closeModal = () => {
+        setOpenModal(false);
+    };
 
     return (
         <div className="w-full flex flex-col border overflow-x-hidden min-h-screen">
