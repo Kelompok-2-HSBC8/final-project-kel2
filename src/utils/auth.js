@@ -1,7 +1,9 @@
 const auth = {
     isAuthenticated: () => {
         const token = localStorage.getItem("token");
-        return !!token;
+        if (token !== undefined && token !== null) {
+            return !!token;
+        }
     },
     storeAuthCredential: (token) => {
         localStorage.setItem("token", token);
