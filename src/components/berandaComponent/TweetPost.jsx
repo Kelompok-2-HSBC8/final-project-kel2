@@ -8,16 +8,13 @@ export default function TweetPost({ isRefresh }) {
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
         JSON.parse(localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token"))
     );
+
     const handleSubmit = async () => {
         try {
-            if (content.length === 0) {
-                return;
-            } else {
-                const res = await createTweet({ content, id: data.user.id });
-                if (res) {
-                    isRefresh(true);
-                    setContent("");
-                }
+            const res = await createTweet({ content, id: data.user.id });
+            if (res) {
+                isRefresh(true);
+                setContent("");
             }
         } catch (error) {
             console.log(error);

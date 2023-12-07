@@ -13,6 +13,7 @@ import TweetPage from "./pages/TweetPage";
 import supabase from "./services/supabase";
 import { useDispatch } from "react-redux";
 import { setUser } from "./redux/slices/user";
+import ProfilePageById from "./pages/ProfilePageById";
 
 function App() {
     const [session, setSession] = useState(null);
@@ -59,6 +60,7 @@ function App() {
                 <Route path="/notifikasi" element={<NotifikasiPage />} />
                 <Route path="/chat" element={<ChatPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile/:id" element={<ProfilePageById />} />
             </Route>
             <Route path="*" element={<NotFound />} />
         </Routes>
