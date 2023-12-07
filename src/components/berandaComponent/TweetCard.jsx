@@ -1,7 +1,12 @@
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { setSelectedTweet } from "../../redux/slices/selectedTweet";
+import { useEffect } from "react";
 export default function TweetCard(props) {
+    const dispatch = useDispatch();
     const {
         tweet,
+        id,
         userName,
         displayName,
         avatar,
@@ -11,6 +16,21 @@ export default function TweetCard(props) {
         totalShare,
         date,
     } = props;
+
+    const data = JSON.parse(
+        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
+        JSON.parse(localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token"))
+    );
+
+    const userId = data?.user?.id;
+    useEffect(() => {
+        dispatch(setSelectedTweet({id: id}));
+    }, [dispatch, id])
+    const isLiked = totalLikes.some((like) => like.user.id === userId);
+    const selectedTweet = () => {
+        dispatch(setSelectedTweet(id));
+        console.log("tes 2", props);
+    };
 
     return (
         <section className="tweet p-4 flex border-t border-slate-300 npx hover:bg-gray-200 cursor-pointer">
@@ -25,7 +45,7 @@ export default function TweetCard(props) {
 
             <div className="w-full">
                 <div className="px-2">
-                    <div >
+                    <div>
                         {/* <a href="#"> */}
                         <span className="font-bold cursor-pointer">
                             {displayName}{" "}
@@ -35,7 +55,7 @@ export default function TweetCard(props) {
                             @{userName.toLowerCase().split(" ").join("")}{" "}
                         </span>
                         <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
-                         • {new Date(date).toLocaleDateString("id-ID")}
+                            • {new Date(date).toLocaleDateString("id-ID")}
                         </span>
                     </div>
 
@@ -70,7 +90,7 @@ export default function TweetCard(props) {
                         </svg>
 
                         <span className="text-sm font-medium text-[#8899A6]">
-                            {totalComments}
+                            {totalComments.length}
                         </span>
                     </div>
 
@@ -89,15 +109,16 @@ export default function TweetCard(props) {
                             <path d="M14.39,6.41a5.27,5.27,0,0,0-3.28-.71H9.3V3.93a.38.38,0,0,0-.64-.27L6.46,5.87a.36.36,0,0,0-.11.26.39.39,0,0,0,.11.27s.88.86,2.2,2a.38.38,0,0,0,.25.09.28.28,0,0,0,.15,0,.38.38,0,0,0,.22-.34V6.45h1.83A4.67,4.67,0,0,1,13.93,7a3.66,3.66,0,0,1,1.55,2.93,3.85,3.85,0,0,1-1,2.5.38.38,0,0,0,0,.53.35.35,0,0,0,.26.1.4.4,0,0,0,.27-.11,4.63,4.63,0,0,0,1.17-3A4.39,4.39,0,0,0,14.39,6.41Zm-5.86.88c-.57-.5-1-.91-1.27-1.16L8.55,4.84Z" />
                         </svg>
 
-                        <span className="text-sm font-medium text-[#8899A6] hover:">
-                            {totalRetweets}
+                        <span className="text-sm font-medium text-[#8899A6]">
+                            {totalRetweets.length}
                         </span>
                     </div>
                     <div className="flex items-center">
                         <svg
-                            fill="#000000"
+                            fill={isLiked ? "#ee0000" : "#000000"}
                             width="2.5rem"
                             height="2.5rem"
+                            onClick={selectedTweet}
                             viewBox="0 0 32.00 32.00"
                             style={{
                                 fillRule: "evenodd",
@@ -110,7 +131,7 @@ export default function TweetCard(props) {
                             xmlns="http://www.w3.org/2000/svg"
                             xmlLang="http://www.serif.com/"
                             xmlnsXlink="http://www.w3.org/1999/xlink"
-                            stroke="#000000"
+                            stroke={isLiked ? "#ee0000" : "#000000"}
                             strokeWidth="0.00032"
                             className="p-2 rounded-full hover:bg-[#ee000029] hover:last-of-type:fill-[#ee0000]"
                         >
@@ -127,8 +148,8 @@ export default function TweetCard(props) {
                             </g>
                         </svg>
 
-                        <span className="text-sm font-medium text-[#8899A6] hover:">
-                            {totalLikes}
+                        <span className="text-sm font-medium text-[#8899A6]">
+                            {totalLikes.length}
                         </span>
                     </div>
                     <div className="flex items-center">
@@ -155,7 +176,7 @@ export default function TweetCard(props) {
                         </svg>
 
                         <span className="text-sm font-medium text-[#8899A6] hover:">
-                            {totalShare}
+                            {totalShare.length}
                         </span>
                     </div>
                 </div>
@@ -169,9 +190,10 @@ TweetCard.propTypes = {
     userName: PropTypes.string,
     displayName: PropTypes.string,
     avatar: PropTypes.string,
-    totalLikes: PropTypes.number,
-    totalComments: PropTypes.number,
-    totalRetweets: PropTypes.number,
-    totalShare: PropTypes.number,
+    totalLikes: PropTypes.array,
+    totalComments: PropTypes.array,
+    totalRetweets: PropTypes.array,
+    totalShare: PropTypes.array,
     date: PropTypes.string,
+    id: PropTypes.string,
 };
