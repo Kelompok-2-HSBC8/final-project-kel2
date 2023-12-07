@@ -7,7 +7,7 @@ import NotifikasiPage from "./pages/NotifikasiPage";
 import BerandaPage from "./pages/BerandaPage";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import TweetPage from "./pages/TweetPage";
 import supabase from "./services/supabase";
@@ -18,6 +18,7 @@ import ProfilePageById from "./pages/ProfilePageById";
 function App() {
     const [session, setSession] = useState(null);
     const dispatch = useDispatch();
+    const location = useLocation();
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -43,16 +44,28 @@ function App() {
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route
-                    path="/"
-                    element={<Middleware page={<MainLayout />} />}
+                    path="*"
+                    element={
+                        <Middleware
+                            page={
+                                <Navigate
+                                    to={"/login"}
+                                    state={{ from: location }}
+                                    replace
+                                />
+                            }
+                        />
+                    }
                 ></Route>
             </Routes>
         );
     }
     return (
         <Routes>
-            <Route path="/login" element={<LoginPage />} />
             {/* protected routenya  */}
+            {location.pathname === "/login" && (
+                <Navigate to={"/"} state={{ from: location }} replace />
+            )}
             <Route path="/" element={<Middleware page={<MainLayout />} />}>
                 <Route path="/" element={<BerandaPage />} />
                 <Route path="/tweet/:id" element={<TweetPage />} />
