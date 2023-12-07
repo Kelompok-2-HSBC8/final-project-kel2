@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
 
-function ProfilePage() {
+function ProfilePageById() {
     const navigate = useNavigate();
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
@@ -352,4 +352,4 @@ function ProfilePage() {
     );
 }
 
-export default ProfilePage;
+export default ProfilePageById;
