@@ -1,4 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import PropTypes from "prop-types";
+import ModalComment from "../ModalComment";
+
 export default function TweetCard(props) {
     const {
         tweet,
@@ -25,7 +28,7 @@ export default function TweetCard(props) {
 
             <div className="w-full">
                 <div className="px-2">
-                    <div >
+                    <div>
                         {/* <a href="#"> */}
                         <span className="font-bold cursor-pointer">
                             {displayName}{" "}
@@ -35,7 +38,7 @@ export default function TweetCard(props) {
                             @{userName.toLowerCase().split(" ").join("")}{" "}
                         </span>
                         <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
-                         • {new Date(date).toLocaleDateString("id-ID")}
+                            • {new Date(date).toLocaleDateString("id-ID")}
                         </span>
                     </div>
 
