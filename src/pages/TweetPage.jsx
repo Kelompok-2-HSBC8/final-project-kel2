@@ -7,10 +7,7 @@ import Loading from "../components/Loading";
 import { getTweetById } from "../services/tweet";
 
 function TweetPage() {
-    const { id } = useParams(); // Ambil nilai ID tweet dari URL
-    // const tweet = useSelector((state) => {
-    //     return state.tweet.data.find((tweet) => tweet.id === id);
-    // });
+    const { id } = useParams();
     const [tweet, setTweet] = useState(null);
     const getTweet = async () => {
         const { data } = await getTweetById(id);
