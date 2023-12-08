@@ -325,7 +325,8 @@ function MainLayout({ children }) {
                                             <img
                                                 src={
                                                     data?.user.user_metadata
-                                                        .avatar_url
+                                                        .avatar_url ||
+                                                    "https://as2.ftcdn.net/v2/jpg/03/32/59/65/1000_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
                                                 }
                                                 className="rounded-full h-14 w-14"
                                                 alt=""
@@ -388,7 +389,7 @@ function MainLayout({ children }) {
                         </div>
                     </main>
 
-                    { active !== 'Chat' &&
+                    {active !== "Chat" && (
                         <section className="invisible lg:visible absolute lg:static lg:col-span-5">
                             <div className="flex flex-col m-auto box-border items-center justify-center">
                                 <button className="flex flex-row g-sky-500 mt-4 group bg-slate-200 rounded-[50px] w-[350px] mx-6 sticky top-0 border-y focus:ring-2 focus:ring-sky-500 focus:border-sky-500">
@@ -889,7 +890,7 @@ function MainLayout({ children }) {
                                 </div>
                             </div>
                         </section>
-                    }
+                    )}
                 </div>
             </div>
         </div>
