@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { setSelectedTweet } from "../../redux/slices/selectedTweet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { likeTweet, unlikeTweet } from "../../services/tweet";
 export default function TweetCard(props) {
+    const [liked, setLiked] = useState(false);
     const dispatch = useDispatch();
     const {
         tweet,
@@ -19,17 +21,43 @@ export default function TweetCard(props) {
 
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
-        JSON.parse(localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token"))
+            JSON.parse(
+                localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+            )
     );
-
     const userId = data?.user?.id;
-    useEffect(() => {
-        dispatch(setSelectedTweet({id: id}));
-    }, [dispatch, id])
     const isLiked = totalLikes.some((like) => like.user.id === userId);
-    const selectedTweet = () => {
-        dispatch(setSelectedTweet(id));
-        console.log("tes 2", props);
+    const likeId = totalLikes.find((like) => like.user.id === userId);
+
+
+    useEffect(() => {
+        dispatch(setSelectedTweet({ id: id }));
+    }, [dispatch, id]);
+    useEffect(() => {
+        if (isLiked) {
+            setLiked(true);
+        }
+    }, [isLiked]);
+
+
+    const handleLike = async () => {
+        console.log('like', liked);
+        try {
+            setLiked(true);
+            await likeTweet({ tweetId: id });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleUnlike = async () => {
+        console.log('unlike', liked);
+        try {
+            setLiked(false);
+            await unlikeTweet({ id: likeId.id });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -115,25 +143,29 @@ export default function TweetCard(props) {
                     </div>
                     <div className="flex items-center">
                         <svg
-                            fill={isLiked ? "#ee0000" : "#000000"}
-                            width="2.5rem"
-                            height="2.5rem"
-                            onClick={selectedTweet}
-                            viewBox="0 0 32.00 32.00"
-                            style={{
-                                fillRule: "evenodd",
-                                clipRule: "evenodd",
-                                strokeLinejoin: "round",
-                                strokeMiterlimit: 2,
-                            }}
-                            version="1.1"
-                            xmlSpace="preserve"
+                            viewBox="0 0 24 24"
+                            fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            xmlLang="http://www.serif.com/"
-                            xmlnsXlink="http://www.w3.org/1999/xlink"
-                            stroke={isLiked ? "#ee0000" : "#000000"}
-                            strokeWidth="0.00032"
-                            className="p-2 rounded-full hover:bg-[#ee000029] hover:last-of-type:fill-[#ee0000]"
+                            stroke={
+                                isLiked || liked
+                                    ? isLiked & !liked
+                                        ? "#ee0000"
+                                        : '"#ee0000" '
+                                    : "#000000"
+                            }
+                            width="2.3rem"
+                            height="2.3rem"
+                            style={{
+                                marginRight: "0.3rem",
+                            }}
+                            className={`p-2 rounded-full hover:bg-[#ee000029] ${
+                                isLiked || liked
+                                    ? isLiked & !liked
+                                        ? "stroke-[#ee0000]"
+                                        : "stroke-[#ee0000]"
+                                    : "stroke-black"
+                            } stroke-[2px] hover:last-of-type:fill-[#ee0000] hover:stroke-[#ee0000]`}
+                            onClick={liked ? handleUnlike : handleLike}
                         >
                             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                             <g
@@ -142,14 +174,23 @@ export default function TweetCard(props) {
                                 strokeLinejoin="round"
                             ></g>
                             <g id="SVGRepo_iconCarrier">
-                                <g id="Icon">
-                                    <path d="M16.004,6.576c-2.941,-2.289 -7.202,-2.083 -9.905,0.619c-2.927,2.927 -2.927,7.68 -0,10.607c-0,0 9.192,9.192 9.192,9.192c0.391,0.391 1.024,0.391 1.415,0l9.192,-9.192c2.927,-2.927 2.927,-7.68 -0,-10.607c-2.69,-2.69 -6.951,-2.88 -9.894,-0.619Zm-0.004,2.328c-0,-0 -0,-0 0,-0c0.438,-0.008 0.667,-0.258 0.703,-0.289c2.355,-2.05 5.641,-2.145 7.781,-0.005c2.146,2.146 2.146,5.631 -0,7.778c-0,-0 -8.486,8.485 -8.486,8.485c0,0 -8.485,-8.485 -8.485,-8.485c-2.146,-2.147 -2.146,-5.632 0,-7.778c2.147,-2.147 5.633,-2.146 7.78,0.001c0.187,0.187 0.442,0.293 0.707,0.293Z"></path>
-                                </g>
+                                <path
+                                    clipRule="evenodd"
+                                    d="M6.47358 1.96511C8.27963 1.93827 10.2651 2.62414 12 4.04838C13.7349 2.62414 15.7204 1.93827 17.5264 1.96511C19.5142 1.99465 21.3334 2.90112 22.2141 4.68531C23.0878 6.45529 22.9326 8.87625 21.4643 11.7362C19.9939 14.6003 17.1643 18.0021 12.4867 21.8566C12.4382 21.898 12.3855 21.9324 12.3298 21.9596C12.1243 22.0601 11.8798 22.0624 11.6702 21.9596C11.6145 21.9324 11.5618 21.898 11.5133 21.8566C6.83565 18.0021 4.00609 14.6003 2.53569 11.7362C1.06742 8.87625 0.912211 6.45529 1.78589 4.68531C2.66659 2.90112 4.4858 1.99465 6.47358 1.96511Z"
+                                    fill={
+                                        isLiked || liked
+                                            ? isLiked & !liked
+                                                ? "#ee0000"
+                                                : "#ee0000"
+                                            : "transparent"
+                                    }
+                                    fillRule="evenodd"
+                                ></path>
                             </g>
                         </svg>
 
                         <span className="text-sm font-medium text-[#8899A6]">
-                            {totalLikes.length}
+                            {liked ? totalLikes.length + 1 : totalLikes.length}
                         </span>
                     </div>
                     <div className="flex items-center">

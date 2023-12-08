@@ -17,7 +17,6 @@ import ProfilePageById from "./pages/ProfilePageById";
 
 function App() {
     const [session, setSession] = useState(null);
-    const dispatch = useDispatch();
     const location = useLocation();
 
     useEffect(() => {
@@ -28,7 +27,6 @@ function App() {
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session?.user);
             localStorage.setItem("token", session?.access_token);
         });
 
@@ -36,8 +34,10 @@ function App() {
     }, []);
 
     useEffect(() => {
-        dispatch(setUser(session));
-    }, [dispatch, session]);
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
+    }, [])
 
     if (!session) {
         return (
@@ -46,14 +46,10 @@ function App() {
                 <Route
                     path="*"
                     element={
-                        <Middleware
-                            page={
-                                <Navigate
-                                    to={"/login"}
-                                    state={{ from: location }}
-                                    replace
-                                />
-                            }
+                        <Navigate
+                            to={"/login"}
+                            state={{ from: location }}
+                            replace
                         />
                     }
                 ></Route>
@@ -66,7 +62,7 @@ function App() {
             {location.pathname === "/login" && (
                 <Navigate to={"/"} state={{ from: location }} replace />
             )}
-            <Route path="/" element={<Middleware page={<MainLayout />} />}>
+            <Route path="/" element={<MainLayout />}>
                 <Route path="/" element={<BerandaPage />} />
                 <Route path="/tweet/:id" element={<TweetPage />} />
                 <Route path="/trend" element={<TrendPage />} />
