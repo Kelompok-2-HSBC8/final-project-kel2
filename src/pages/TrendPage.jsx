@@ -2,7 +2,7 @@ function TrendPage() {
     return (
         <>
             <div className="flex justify-between py-3 px-6 space-x-6">
-                <form className="w-full max-w-md" action="">
+                <form className="w-full" action="">
                     <div className="relative flex items-center text-blue-400 focus-within:text-blue-600">
                         <svg
                             className="w-5 h-5 absolute ml-3 pointer-events-none "
@@ -19,7 +19,7 @@ function TrendPage() {
                             />
                         </svg>
                         <input
-                            className="w-full pr-3 pl-10 py-2 rounded-2xl placeholder-gray-500 ring-blue-600"
+                            className="rounded-full w-full px-6 py-3 border-2 focus:outline-cyan-500 text-center"
                             type="search"
                             placeholder="Search"
                         />
@@ -31,7 +31,7 @@ function TrendPage() {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="w-6 h-6"
+                    className="w-8 h-8 mt-2"
                 >
                     <path
                         strokeLinecap="round"
@@ -128,7 +128,7 @@ function TrendPage() {
                 <h2 className="text-xl font-bold mb-4">Whats Happening</h2>
                 <ul>
                     <a href="">
-                        <div className="bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 text-white p-4 rounded-lg">
+                        <div className="bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 text-white p-4 rounded-lg mb-4">
                             <div className="flex justify-between items-center mb-4">
                                 <img
                                     src="https://th.bing.com/th?id=OIP.xtzU85EYYQXBoaEAapzaUwHaJZ&w=222&h=281&c=8&rs=1&qlt=90&o=6&dpr=1
@@ -218,7 +218,7 @@ function TrendPage() {
                         </div>
                         <img
                             className="w-16 h-16 rounded-xl"
-                            src="https://th.bing.com/th?id=OIF.1KzzdaJHC%2bL%2fYl9LJ3Q3ww&w=332&h=186&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+                            src="https://cdn-media.theathletic.com/cdn-cgi/image/width=770%2cformat=auto%2cquality=75/https://cdn-media.theathletic.com/JVMmHbS0CxQ7_58aYenPCZctz_1440x960.jpg"
                             alt="New York Fashion Week 2023"
                         />
                     </li>
