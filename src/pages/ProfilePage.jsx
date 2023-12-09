@@ -8,6 +8,7 @@ import Loading from "../components/Loading";
 import TweetCard from "../components/berandaComponent/TweetCard";
 
 function ProfilePage() {
+    const [refetch , setRefetch] = useState(false)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState();
@@ -37,9 +38,15 @@ function ProfilePage() {
         }
     };
 
+    const bio = user?.bio[user?.bio.length - 1]
+
     useEffect(() => {
         userInfo();
     }, []);
+
+    useEffect(() => {
+        userInfo();
+    }, [refetch])
 
     const modalHandler = () => {
         setOpenModal(true);
@@ -108,7 +115,7 @@ function ProfilePage() {
                         Edit Profile
                     </button>
                     {
-                        openModal && <ModalEditProfile closeModal={closeModal} />
+                        openModal && <ModalEditProfile closeModal={closeModal} refetch={setRefetch}/>
                     }
                 </div>
             </div>
@@ -125,6 +132,7 @@ function ProfilePage() {
                             .split(" ")
                             .join("")}
                 </h5>
+                <span className="text-sm mt-2">{bio?.bio}</span>
             </div>
             <div className="flex flex-row p-3 relative bottom-[5.8rem]">
                 <div className="flex justify-center items-center">

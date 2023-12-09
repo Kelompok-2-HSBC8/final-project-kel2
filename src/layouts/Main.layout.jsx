@@ -915,7 +915,7 @@ function MainLayout({ children }) {
                                                             follow
                                                                 ? "bg-transparent border-black border w-[120px] text-black"
                                                                 : "bg-black w-[70px] text-white"
-                                                        }  h-[30px]  rounded-[20px] ml-[50px] font-semibold my-auto`}
+                                                        }  h-[30px]  rounded-[20px] ml-[50px] font-semibold my-auto cursor-pointer`}
                                                         onClick={() =>
                                                             handleFollow(
                                                                 item.id

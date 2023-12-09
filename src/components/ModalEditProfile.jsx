@@ -1,14 +1,30 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { createBio } from "../services/user";
 
-function ModalEditProfile({ closeModal }) {
+function ModalEditProfile({ closeModal, refetch }) {
     const [bioText, setBioText] = useState("");
-
+    const [valid, setValid] = useState(false);
     const handleTextareaChange = (event) => {
+        if (event.target.value.length !== 0) {
+            setValid(true);
+        }else{
+            setValid(false);
+        }
         const newText = event.target.value;
         setBioText(newText);
     };
-
+    const handleSubmit = async () => {
+        try {
+            if (!valid) return;
+            await createBio({ bio: bioText });
+            refetch(true)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            closeModal();
+        }
+    };
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
             JSON.parse(
@@ -27,8 +43,15 @@ function ModalEditProfile({ closeModal }) {
                         >
                             &#x2715;
                         </button>
-                        <button className="absolute top-4 right-4 bg-sky-500 hover:bg-sky-600 rounded-full w-20 h-8 font-bold text-white ">
-                            simpan
+                        <button
+                            className={`text-sm absolute top-4 right-4 ${
+                                valid
+                                    ? "bg-sky-500 hover:bg-sky-600"
+                                    : "bg-sky-300"
+                            }  rounded-full w-20 h-8 font-bold text-white `}
+                            onClick={handleSubmit}
+                        >
+                            Simpan
                         </button>
                     </div>
 
@@ -45,7 +68,7 @@ function ModalEditProfile({ closeModal }) {
                         />
                     </div>
                     <div className="flex justify-center mb-[40px]">
-                        <div className="w-[570px] h-[100px] bg-white border border-black rounded-xl flex flex-col p-2 ">
+                        <div className="w-[570px] h-[100px] bg-white border border-slate-300 rounded-xl flex flex-col p-2 ">
                             <div className="flex flex-row justify-between mx-2">
                                 <p>Bio</p>
                                 <p className="text-slate-500 text-[0.75rem]">
@@ -70,6 +93,7 @@ function ModalEditProfile({ closeModal }) {
 
 ModalEditProfile.propTypes = {
     closeModal: PropTypes.func.isRequired,
+    refetch: PropTypes.func
 };
 
 export default ModalEditProfile;
