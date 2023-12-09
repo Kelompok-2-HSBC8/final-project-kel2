@@ -35,19 +35,19 @@ function NotifikasiPage() {
             </div>
 
             <div className="flex justify-center border-b">
-                <button className="grow p-4 text-center font-bold text-[#536471]">
+                <button className="grow p-4 text-center font-bold text-[#536471] hover:bg-slate-100">
                     <div>All</div>
                 </button>
-                <button className="grow p-4 text-center font-bold text-[#536471]">
+                <button className="grow p-4 text-center font-bold text-[#536471] hover:bg-slate-100">
                     Verified
                 </button>
-                <button className="grow p-4 text-center font-bold text-[#536471]">
+                <button className="grow p-4 text-center font-bold text-[#536471] hover:bg-slate-100">
                     Mentions
                 </button>
             </div>
 
             <article>
-                <div className="flex justify-start border-b p-2">
+                <div className="flex justify-start border-b p-2 hover:bg-slate-100">
                     <svg
                         xmlnsXlink="http://www.w3.org/1999/xlink"
                         xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@ function NotifikasiPage() {
                     <div>
                         <img src="./pp1.jpg" className="w-8 h-8 rounded-full" />
                         <p>
-                            <b>Hanyur</b> liked your post
+                        <b className="text-black hover:underline">Arsyad</b> liked your post
                         </p>
                         <span className="line-clamp-3 justify-around">
                             lagi trial nih
@@ -77,7 +77,7 @@ function NotifikasiPage() {
             </article>
 
             <article>
-                <div className="flex justify-start border-b p-2">
+                <div className="flex justify-start border-b p-2 hover:bg-slate-100">
                     <svg
                         xmlnsXlink="http://www.w3.org/1999/xlink"
                         xmlns="http://www.w3.org/2000/svg"
@@ -97,26 +97,26 @@ function NotifikasiPage() {
                     <div>
                         <img src="./pp2.jpg" className="w-8 h-8 rounded-full" />
                         <p>
-                            <b>Danu</b> followed you
+                        <b className="text-black hover:underline">Fauzan</b> followed you
                         </p>
                     </div>
                 </div>
             </article>
 
             <article>
-                <div className="border-b p-2">
+                <div className="border-b p-2 hover:bg-slate-100">
                     <div className="flex justify-between mb-2">
                         <div className="flex justify-start">
                             <img
                                 src="./pp1.jpg"
                                 className="w-8 h-8 rounded-full mr-4 ml-1"
                             />
-                            <div>
+                            <div className="text-[grey]">
                                 <p>
-                                    <b>Hanyur</b> @hanyur_optic &#8901; Aug 21
+                                <b className="text-black hover:underline">Arsyad</b> @arsyad_optic &#8901; Aug 21
                                 </p>
-                                <p>Replying to @RestaAgeng</p>
-                                <span>aman ga?</span>
+                                <p>Replying to <a href="#" className="text-[#1D9bf0] hover:underline">@harismauladi</a></p>
+                                <span className="text-black">aman ga?</span>
                             </div>
                         </div>
                         <svg
@@ -124,9 +124,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -142,9 +142,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -158,8 +158,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -173,8 +174,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -189,9 +191,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -205,19 +207,19 @@ function NotifikasiPage() {
             </article>
 
             <article>
-                <div className="border-b p-2">
+                <div className="border-b p-2 hover:bg-slate-100">
                     <div className="flex justify-between mb-2">
                         <div className="flex justify-start">
                             <img
                                 src="./pp1.jpg"
                                 className="w-8 h-8 rounded-full mr-4 ml-1"
                             />
-                            <div>
+                            <div className="text-[grey]">
                                 <p>
-                                    <b>Hanyur</b> @hanyur_optic &#8901; Aug 21
+                                <b className="text-black hover:underline">Arsyad</b> @arsyad_optic &#8901; Aug 21
                                 </p>
-                                <p>Replying to @RestaAgeng</p>
-                                <span>aman ga?</span>
+                                <p>Replying to <a href="#" className="text-[#1D9bf0] hover:underline">@harismauladi</a></p>
+                                <span className="text-black">wokehh</span>
                             </div>
                         </div>
                         <svg
@@ -225,9 +227,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -243,9 +245,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -259,8 +261,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -274,8 +277,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
@@ -290,9 +294,9 @@ function NotifikasiPage() {
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
-                            className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
-                            width="20"
-                            height="20"
+                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#c7c7c7]"
+                            width="36"
+                            height="36"
                         >
                             <g fill="#536471">
                                 <path
