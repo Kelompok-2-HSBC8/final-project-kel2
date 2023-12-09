@@ -6,6 +6,7 @@ import TweetPost from "../components/berandaComponent/TweetPost";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Loading from "../components/Loading";
+import SkeletonLoading from "../components/SkeletonLoading";
 
 function BerandaPage() {
     const [isRefresh, setIsRefresh] = useState(false);
@@ -24,9 +25,25 @@ function BerandaPage() {
             <>
                 <Header value="Home" />
                 <TweetPost />
-                <div className="flex justify-center items-center">
-                    <Loading />
-                </div>
+
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
             </>
         );
     }
@@ -43,6 +60,7 @@ function BerandaPage() {
                             {/* <Link to={`/tweet/${tweet?.id}`}> */}
                             <TweetCard
                                 tweet={tweet?.content}
+                                tweetUserId={tweet?.postedBy?.id}
                                 id={tweet?.id}
                                 userName={
                                     tweet?.postedBy?.raw_user_meta_data

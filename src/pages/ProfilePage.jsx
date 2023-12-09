@@ -1,11 +1,16 @@
 // eslint-disable-next-line no-unused-vars
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment/moment";
 import ModalEditProfile from "../components/ModalEditProfile";
+import { getUserInfo } from "../services/user";
+import Loading from "../components/Loading";
+import TweetCard from "../components/berandaComponent/TweetCard";
 
 function ProfilePage() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState();
     const [openModal, setOpenModal] = useState(false);
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
@@ -14,6 +19,28 @@ function ProfilePage() {
             )
     );
 
+    const userInfo = async () => {
+        try {
+            setLoading(true);
+            const res = await getUserInfo();
+            if (res.data) {
+                setUser(res.data.data.data);
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(res.data.data.data)
+                );
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        userInfo();
+    }, []);
+
     const modalHandler = () => {
         setOpenModal(true);
     };
@@ -21,6 +48,14 @@ function ProfilePage() {
     const closeModal = () => {
         setOpenModal(false);
     };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen w-full p-2">
+                <Loading />
+            </div>
+        );
+    }
 
     return (
         <div className="w-full flex flex-col border overflow-x-hidden min-h-screen">
@@ -52,7 +87,7 @@ function ProfilePage() {
                         {data?.user.user_metadata.name || "-"}
                     </h1>
                     <h3 className="text-sm font-[200] opacity-50">
-                        0 Postingan
+                        {user?.tweet.length} Postingan
                     </h3>
                 </div>
             </div>
@@ -69,9 +104,12 @@ function ProfilePage() {
                     alt="profile"
                 />
                 <div className="my-3 mx-2">
-                    <button className="p-2 border rounded-full text-sm pl-6 pr-6 font-bold border-gray-300 hover:bg-gray-100">
+                    <button className="p-2 border rounded-full text-sm pl-6 pr-6 font-bold border-gray-300 hover:bg-gray-100" onClick={modalHandler}>
                         Edit Profile
                     </button>
+                    {
+                        openModal && <ModalEditProfile closeModal={closeModal} />
+                    }
                 </div>
             </div>
 
@@ -112,7 +150,9 @@ function ProfilePage() {
             <div className="flex flex-row p-3 relative bottom-[6.4rem]">
                 <div className="flex flex-row justify-center items-center mr-4">
                     <Link to="/profile/following" className="hover:border-b">
-                        <span className="ml-1 font-bold">{0}</span>
+                        <span className="ml-1 font-bold">
+                            {user?.following?.length}
+                        </span>
                         <span className="font-[300] mx-2 text-gray-500">
                             Mengikuti
                         </span>
@@ -120,7 +160,9 @@ function ProfilePage() {
                 </div>
                 <div className="flex flex-row justify-center items-center mr-4">
                     <Link to="/profile/followers" className="hover:border-b">
-                        <span className="ml-1 font-bold">{0}</span>
+                        <span className="ml-1 font-bold">
+                            {user?.followers?.length}
+                        </span>
                         <span className="font-[300] mx-2 text-gray-500">
                             Pengikut
                         </span>
@@ -131,15 +173,40 @@ function ProfilePage() {
                 <div className="p-4 border-[5px] border-l-0 border-t-0 border-r-0 border-[#00acee] cursor-pointer hover:bg-gray-100">
                     Postingan
                 </div>
-                <div className="p-4 cursor-pointer hover:bg-gray-100 text-gray-400">
-                    Balasan
-                </div>
-                <div className="p-4 cursor-pointer hover:bg-gray-100 text-gray-400">
-                    Sorotan
-                </div>
-                <div className="p-4 cursor-pointer hover:bg-gray-100 text-gray-400">
-                    Media
-                </div>
+            </div>
+            <div className="flex flex-col relative w-full bottom-24 p-0 m-0">
+                <ul>
+                    {user?.tweet?.map((tweet) => {
+                        return (
+                            <li key={tweet.id}>
+                                {/* <Link to={`/tweet/${tweet?.id}`}> */}
+                                <TweetCard
+                                    tweet={tweet?.content}
+                                    id={tweet?.id}
+                                    userName={
+                                        tweet?.postedBy?.raw_user_meta_data
+                                            .user_name ??
+                                        tweet?.postedBy?.raw_user_meta_data.name
+                                    }
+                                    displayName={
+                                        tweet?.postedBy?.raw_user_meta_data.name
+                                    }
+                                    avatar={
+                                        tweet?.postedBy?.raw_user_meta_data
+                                            .avatar_url ||
+                                        "https://as2.ftcdn.net/v2/jpg/03/32/59/65/1000_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
+                                    }
+                                    totalLikes={tweet.likesBy}
+                                    totalComments={tweet.commentBy}
+                                    totalRetweets={tweet.retweetBy}
+                                    totalShare={tweet.shareBy}
+                                    date={tweet.createdAt}
+                                />
+                                {/* </Link> */}
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
             {/* <div className="flex flex-col relative w-full bottom-24 p-0 m-0">
                 <div className="flex flex-row p-4 w-full border border-l-0 border-r-0 hover:bg-gray-100 cursor-pointer">

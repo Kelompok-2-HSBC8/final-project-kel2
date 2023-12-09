@@ -1,9 +1,34 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { createTweet } from "../services/tweet";
 
 function ModalPost({ cancelPost }) {
+    const [content, setContent] = useState("");
+    const [valid, setValid] = useState(false);
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
     );
+
+    const handleSubmit = async () => {
+        try {
+            const res = await createTweet({ content, id: data.user.id });
+            if (res) {
+                setContent("");
+                cancelPost();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleContent = (e) => {
+        setContent(e.target.value);
+        if (e.target.value.length !== 0) {
+            setValid(true);
+        } else {
+            setValid(false);
+        }
+    };
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="fixed inset-0 backdrop-blur-[1.5px] backdrop-brightness-50"></div>
@@ -27,6 +52,7 @@ function ModalPost({ cancelPost }) {
                             style={{ overflow: "hidden" }}
                             maxLength="280"
                             rows="4"
+                            onChange={handleContent}
                             placeholder="What is happening ?!"
                             className="w-[500px] rounded-xl resize-none border-none focus:outline-none focus:ring-0"
                         ></textarea>
@@ -85,7 +111,14 @@ function ModalPost({ cancelPost }) {
                             </div>
                         </div>
                         <div>
-                            <button className="bg-sky-500 hover:bg-sky-600 rounded-full w-20 h-8 font-bold text-white">
+                            <button
+                                className={`${
+                                    valid
+                                        ? "bg-sky-500 hover:bg-sky-600"
+                                        : "bg-sky-300"
+                                }  rounded-full w-20 h-8 font-bold text-white`}
+                                onClick={handleSubmit}
+                            >
                                 Post
                             </button>
                         </div>

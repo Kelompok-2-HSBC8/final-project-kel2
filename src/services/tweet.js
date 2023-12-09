@@ -24,3 +24,15 @@ export const createTweet = (body) => {
 export const getTweetById = (id) => {
     return api().get(`/v1/tweet/${id}`);
 };
+
+export const likeTweet = (tweetId) => {
+    return api().post(`/v1/tweet/like`, tweetId);
+};
+
+export const unlikeTweet = (id) => {
+    return api().delete(`/v1/tweet/like`, { data: id });
+};
+
+export const commentTweet = (tweetId) => {
+    return api().post(`/v1/tweet/comment`, tweetId)
+}

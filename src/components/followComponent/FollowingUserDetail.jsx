@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "../Header";
 
-export default function Followers() {
+export default function FollowingUserDetail() {
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
             JSON.parse(
@@ -9,22 +9,22 @@ export default function Followers() {
             )
     );
 
-    const userData = JSON.parse(localStorage.getItem("user"));
-    const followers = userData?.followers;
+    const userData = JSON.parse(localStorage.getItem("userDetail"));
+    const following = userData?.following;
     return (
         <div className="min-h-screen">
             <div className="border-b border-slate-300">
                 <div className="flex justify-center w-full">
                     <Link
-                        className="p-4 grow text-center hover:bg-gray-100 border-b-[5px] border-b-[#00acee]"
-                        to="/profile/followers"
+                        className="p-4 grow text-center hover:bg-gray-100 "
+                        to={`/profile/${userData?.id}/followers`}
                     >
                         Followers
                     </Link>
 
                     <Link
-                        className="p-4 grow text-center hover:bg-gray-100"
-                        to="/profile/following"
+                        className="p-4 grow text-center hover:bg-gray-100 border-b-[5px] border-b-[#00acee]"
+                        to={`/profile/${userData?.id}/following`}
                     >
                         Following
                     </Link>
@@ -32,8 +32,8 @@ export default function Followers() {
             </div>
 
             {/* list followers */}
-            {followers &&
-                followers.map((item, index) => {
+            {following &&
+                following.map((item, index) => {
                     return (
                         <div
                             className="flex items-center justify-between"
@@ -70,8 +70,8 @@ export default function Followers() {
                             </div>
                             <div className="flex items-center">
                                 <div className="mr-4">
-                                    <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
-                                        Follow
+                                    <button className="bg-white border-black border text-black h-[30px] w-[120px] rounded-[20px] ml-[50px] font-semibold my-auto">
+                                        Following
                                     </button>
                                 </div>
                             </div>

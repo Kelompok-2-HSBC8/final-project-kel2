@@ -1,8 +1,11 @@
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { setSelectedTweet } from "../../redux/slices/selectedTweet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { likeTweet, unlikeTweet } from "../../services/tweet";
+import { Link } from "react-router-dom";
 export default function TweetCard(props) {
+    const [liked, setLiked] = useState(false);
     const dispatch = useDispatch();
     const {
         tweet,
@@ -15,21 +18,46 @@ export default function TweetCard(props) {
         totalRetweets,
         totalShare,
         date,
+        tweetUserId,
     } = props;
 
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
-        JSON.parse(localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token"))
+            JSON.parse(
+                localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+            )
     );
-
     const userId = data?.user?.id;
-    useEffect(() => {
-        dispatch(setSelectedTweet({id: id}));
-    }, [dispatch, id])
     const isLiked = totalLikes.some((like) => like.user.id === userId);
-    const selectedTweet = () => {
-        dispatch(setSelectedTweet(id));
-        console.log("tes 2", props);
+    const likeId = totalLikes.find((like) => like.user.id === userId);
+
+    useEffect(() => {
+        dispatch(setSelectedTweet({ id: id }));
+    }, [dispatch, id]);
+    useEffect(() => {
+        if (isLiked) {
+            setLiked(true);
+        }
+    }, [isLiked]);
+
+    const handleLike = async () => {
+        console.log("like", liked);
+        try {
+            setLiked(true);
+            await likeTweet({ tweetId: id });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleUnlike = async () => {
+        console.log("unlike", liked);
+        try {
+            setLiked(false);
+            await unlikeTweet({ id: likeId.id });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -45,19 +73,21 @@ export default function TweetCard(props) {
 
             <div className="w-full">
                 <div className="px-2">
-                    <div>
-                        {/* <a href="#"> */}
-                        <span className="font-bold cursor-pointer">
-                            {displayName}{" "}
-                        </span>
-                        {/* </a> */}
-                        <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
-                            @{userName.toLowerCase().split(" ").join("")}{" "}
-                        </span>
-                        <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
-                            • {new Date(date).toLocaleDateString("id-ID")}
-                        </span>
-                    </div>
+                    <Link to={`/profile/${tweetUserId}`}>
+                        <div>
+                            {/* <a href="#"> */}
+                            <span className="font-bold cursor-pointer">
+                                {displayName}{" "}
+                            </span>
+                            {/* </a> */}
+                            <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
+                                @{userName.toLowerCase().split(" ").join("")}{" "}
+                            </span>
+                            <span className="font-medium text-sm text-[#8899A6] relative bottom-[1px]">
+                                • {new Date(date).toLocaleDateString("id-ID")}
+                            </span>
+                        </div>
+                    </Link>
 
                     <div className="font-medium mb-3">
                         <p>{tweet}</p>
@@ -68,26 +98,28 @@ export default function TweetCard(props) {
 
                 <div className="flex justify-between">
                     <div className="flex items-center">
-                        <svg
-                            fill="#000000"
-                            viewBox="0 0 32 32"
-                            version="1.1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="2.3em"
-                            height="2.3rem"
-                            className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#00acee]"
-                        >
-                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                            <g
-                                id="SVGRepo_tracerCarrier"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            ></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <title>comment</title>
-                                <path d="M16.5 2.353c-7.857 0-14.25 5.438-14.25 12.124 0.044 2.834 1.15 5.402 2.938 7.33l-0.006-0.007c-0.597 2.605-1.907 4.844-3.712 6.569l-0.005 0.005c-0.132 0.135-0.214 0.32-0.214 0.525 0 0.414 0.336 0.75 0.75 0.751h0c0.054-0 0.107-0.006 0.158-0.017l-0.005 0.001c3.47-0.559 6.546-1.94 9.119-3.936l-0.045 0.034c1.569 0.552 3.378 0.871 5.262 0.871 0.004 0 0.009 0 0.013 0h-0.001c7.857 0 14.25-5.439 14.25-12.125s-6.393-12.124-14.25-12.124zM16.5 25.102c-0.016 0-0.035 0-0.054 0-1.832 0-3.586-0.332-5.205-0.94l0.102 0.034c-0.058-0.018-0.126-0.029-0.195-0.030h-0.001c-0.020-0.002-0.036-0.009-0.056-0.009 0 0-0 0-0 0-0.185 0-0.354 0.068-0.485 0.18l0.001-0.001c-0.010 0.008-0.024 0.004-0.034 0.013-1.797 1.519-3.97 2.653-6.357 3.243l-0.108 0.023c1.29-1.633 2.215-3.613 2.619-5.777l0.013-0.083c0-0.006 0-0.014 0-0.021 0-0.021-0.001-0.043-0.003-0.064l0 0.003c0-0.005 0-0.010 0-0.015 0-0.019-0.001-0.037-0.002-0.055l0 0.002c-0.004-0.181-0.073-0.345-0.184-0.47l0.001 0.001-0.011-0.027c-1.704-1.697-2.767-4.038-2.791-6.626l-0-0.005c0-5.858 5.72-10.624 12.75-10.624s12.75 4.766 12.75 10.624c0 5.859-5.719 10.625-12.75 10.625z"></path>
-                            </g>
-                        </svg>
+                        <Link to={`/tweet/${id}`}>
+                            <svg
+                                fill="#000000"
+                                viewBox="0 0 32 32"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="2.3em"
+                                height="2.3rem"
+                                className="px-2 rounded-full hover:bg-[#00ceee29] hover:fill-[#00acee]"
+                            >
+                                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                <g
+                                    id="SVGRepo_tracerCarrier"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                ></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <title>comment</title>
+                                    <path d="M16.5 2.353c-7.857 0-14.25 5.438-14.25 12.124 0.044 2.834 1.15 5.402 2.938 7.33l-0.006-0.007c-0.597 2.605-1.907 4.844-3.712 6.569l-0.005 0.005c-0.132 0.135-0.214 0.32-0.214 0.525 0 0.414 0.336 0.75 0.75 0.751h0c0.054-0 0.107-0.006 0.158-0.017l-0.005 0.001c3.47-0.559 6.546-1.94 9.119-3.936l-0.045 0.034c1.569 0.552 3.378 0.871 5.262 0.871 0.004 0 0.009 0 0.013 0h-0.001c7.857 0 14.25-5.439 14.25-12.125s-6.393-12.124-14.25-12.124zM16.5 25.102c-0.016 0-0.035 0-0.054 0-1.832 0-3.586-0.332-5.205-0.94l0.102 0.034c-0.058-0.018-0.126-0.029-0.195-0.030h-0.001c-0.020-0.002-0.036-0.009-0.056-0.009 0 0-0 0-0 0-0.185 0-0.354 0.068-0.485 0.18l0.001-0.001c-0.010 0.008-0.024 0.004-0.034 0.013-1.797 1.519-3.97 2.653-6.357 3.243l-0.108 0.023c1.29-1.633 2.215-3.613 2.619-5.777l0.013-0.083c0-0.006 0-0.014 0-0.021 0-0.021-0.001-0.043-0.003-0.064l0 0.003c0-0.005 0-0.010 0-0.015 0-0.019-0.001-0.037-0.002-0.055l0 0.002c-0.004-0.181-0.073-0.345-0.184-0.47l0.001 0.001-0.011-0.027c-1.704-1.697-2.767-4.038-2.791-6.626l-0-0.005c0-5.858 5.72-10.624 12.75-10.624s12.75 4.766 12.75 10.624c0 5.859-5.719 10.625-12.75 10.625z"></path>
+                                </g>
+                            </svg>
+                        </Link>
 
                         <span className="text-sm font-medium text-[#8899A6]">
                             {totalComments.length}
@@ -115,25 +147,29 @@ export default function TweetCard(props) {
                     </div>
                     <div className="flex items-center">
                         <svg
-                            fill={isLiked ? "#ee0000" : "#000000"}
-                            width="2.5rem"
-                            height="2.5rem"
-                            onClick={selectedTweet}
-                            viewBox="0 0 32.00 32.00"
-                            style={{
-                                fillRule: "evenodd",
-                                clipRule: "evenodd",
-                                strokeLinejoin: "round",
-                                strokeMiterlimit: 2,
-                            }}
-                            version="1.1"
-                            xmlSpace="preserve"
+                            viewBox="0 0 24 24"
+                            fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            xmlLang="http://www.serif.com/"
-                            xmlnsXlink="http://www.w3.org/1999/xlink"
-                            stroke={isLiked ? "#ee0000" : "#000000"}
-                            strokeWidth="0.00032"
-                            className="p-2 rounded-full hover:bg-[#ee000029] hover:last-of-type:fill-[#ee0000]"
+                            stroke={
+                                isLiked || liked
+                                    ? isLiked & !liked
+                                        ? "#ee0000"
+                                        : '"#ee0000" '
+                                    : "#000000"
+                            }
+                            width="2.3rem"
+                            height="2.3rem"
+                            style={{
+                                marginRight: "0.3rem",
+                            }}
+                            className={`p-2 rounded-full hover:bg-[#ee000029] ${
+                                isLiked || liked
+                                    ? isLiked & !liked
+                                        ? "stroke-[#ee0000]"
+                                        : "stroke-[#ee0000]"
+                                    : "stroke-black"
+                            } stroke-[2px] hover:last-of-type:fill-[#ee0000] hover:stroke-[#ee0000]`}
+                            onClick={liked ? handleUnlike : handleLike}
                         >
                             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                             <g
@@ -142,14 +178,23 @@ export default function TweetCard(props) {
                                 strokeLinejoin="round"
                             ></g>
                             <g id="SVGRepo_iconCarrier">
-                                <g id="Icon">
-                                    <path d="M16.004,6.576c-2.941,-2.289 -7.202,-2.083 -9.905,0.619c-2.927,2.927 -2.927,7.68 -0,10.607c-0,0 9.192,9.192 9.192,9.192c0.391,0.391 1.024,0.391 1.415,0l9.192,-9.192c2.927,-2.927 2.927,-7.68 -0,-10.607c-2.69,-2.69 -6.951,-2.88 -9.894,-0.619Zm-0.004,2.328c-0,-0 -0,-0 0,-0c0.438,-0.008 0.667,-0.258 0.703,-0.289c2.355,-2.05 5.641,-2.145 7.781,-0.005c2.146,2.146 2.146,5.631 -0,7.778c-0,-0 -8.486,8.485 -8.486,8.485c0,0 -8.485,-8.485 -8.485,-8.485c-2.146,-2.147 -2.146,-5.632 0,-7.778c2.147,-2.147 5.633,-2.146 7.78,0.001c0.187,0.187 0.442,0.293 0.707,0.293Z"></path>
-                                </g>
+                                <path
+                                    clipRule="evenodd"
+                                    d="M6.47358 1.96511C8.27963 1.93827 10.2651 2.62414 12 4.04838C13.7349 2.62414 15.7204 1.93827 17.5264 1.96511C19.5142 1.99465 21.3334 2.90112 22.2141 4.68531C23.0878 6.45529 22.9326 8.87625 21.4643 11.7362C19.9939 14.6003 17.1643 18.0021 12.4867 21.8566C12.4382 21.898 12.3855 21.9324 12.3298 21.9596C12.1243 22.0601 11.8798 22.0624 11.6702 21.9596C11.6145 21.9324 11.5618 21.898 11.5133 21.8566C6.83565 18.0021 4.00609 14.6003 2.53569 11.7362C1.06742 8.87625 0.912211 6.45529 1.78589 4.68531C2.66659 2.90112 4.4858 1.99465 6.47358 1.96511Z"
+                                    fill={
+                                        isLiked || liked
+                                            ? isLiked & !liked
+                                                ? "#ee0000"
+                                                : "#ee0000"
+                                            : "transparent"
+                                    }
+                                    fillRule="evenodd"
+                                ></path>
                             </g>
                         </svg>
 
                         <span className="text-sm font-medium text-[#8899A6]">
-                            {totalLikes.length}
+                            {liked ? totalLikes.length + 1 : totalLikes.length}
                         </span>
                     </div>
                     <div className="flex items-center">
@@ -196,4 +241,5 @@ TweetCard.propTypes = {
     totalShare: PropTypes.array,
     date: PropTypes.string,
     id: PropTypes.string,
+    tweetUserId: PropTypes.string,
 };
