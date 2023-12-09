@@ -1,26 +1,15 @@
 // eslint-disable-next-line no-unused-vars
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
-import ModalEditProfile from "../components/ModalEditProfile";
 
-function ProfilePage() {
+function ProfilePageById() {
     const navigate = useNavigate();
-    const [openModal, setOpenModal] = useState(false);
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
             JSON.parse(
                 localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
             )
     );
-
-    const modalHandler = () => {
-        setOpenModal(true);
-    };
-
-    const closeModal = () => {
-        setOpenModal(false);
-    };
 
     return (
         <div className="w-full flex flex-col border overflow-x-hidden min-h-screen">
@@ -111,20 +100,16 @@ function ProfilePage() {
             </div>
             <div className="flex flex-row p-3 relative bottom-[6.4rem]">
                 <div className="flex flex-row justify-center items-center mr-4">
-                    <Link to="/profile/following" className="hover:border-b">
-                        <span className="ml-1 font-bold">{0}</span>
-                        <span className="font-[300] mx-2 text-gray-500">
-                            Mengikuti
-                        </span>
-                    </Link>
+                    <span className="ml-1 font-bold">{0}</span>
+                    <span className="font-[300] mx-2 text-gray-500">
+                        Mengikuti
+                    </span>
                 </div>
                 <div className="flex flex-row justify-center items-center mr-4">
-                    <Link to="/profile/followers" className="hover:border-b">
-                        <span className="ml-1 font-bold">{0}</span>
-                        <span className="font-[300] mx-2 text-gray-500">
-                            Pengikut
-                        </span>
-                    </Link>
+                    <span className="ml-1 font-bold">{0}</span>
+                    <span className="font-[300] mx-2 text-gray-500">
+                        Pengikut
+                    </span>
                 </div>
             </div>
             <div className="flex flex-row relative bottom-24 border border-t-0 boder-r-0 border-l-0">
@@ -367,4 +352,4 @@ function ProfilePage() {
     );
 }
 
-export default ProfilePage;
+export default ProfilePageById;

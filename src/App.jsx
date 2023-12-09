@@ -7,16 +7,20 @@ import NotifikasiPage from "./pages/NotifikasiPage";
 import BerandaPage from "./pages/BerandaPage";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import TweetPage from "./pages/TweetPage";
 import supabase from "./services/supabase";
 import { useDispatch } from "react-redux";
 import { setUser } from "./redux/slices/user";
+import ProfilePageById from "./pages/ProfilePageById";
+import FollowersPage from "./pages/FollowerPage";
+import FollowingPage from "./pages/FollowingPage";
 
 function App() {
     const [session, setSession] = useState(null);
     const dispatch = useDispatch();
+    const location = useLocation();
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -41,13 +45,29 @@ function App() {
         return (
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route
+                    path="*"
+                    element={
+                        <Middleware
+                            page={
+                                <Navigate
+                                    to={"/login"}
+                                    state={{ from: location }}
+                                    replace
+                                />
+                            }
+                        />
+                    }
+                ></Route>
             </Routes>
         );
     }
     return (
         <Routes>
-            <Route path="/login" element={<LoginPage />} />
             {/* protected routenya  */}
+            {location.pathname === "/login" && (
+                <Navigate to={"/"} state={{ from: location }} replace />
+            )}
             <Route path="/" element={<Middleware page={<MainLayout />} />}>
                 <Route path="/" element={<BerandaPage />} />
                 <Route path="/tweet/:id" element={<TweetPage />} />
@@ -55,6 +75,9 @@ function App() {
                 <Route path="/notifikasi" element={<NotifikasiPage />} />
                 <Route path="/chat" element={<ChatPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="profile/followers" element={<FollowersPage />} />
+                <Route path="profile/following" element={<FollowingPage />} />
+                <Route path="/profile/:id" element={<ProfilePageById />} />
             </Route>
             <Route path="*" element={<NotFound />} />
         </Routes>
