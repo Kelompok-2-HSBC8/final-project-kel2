@@ -70,7 +70,7 @@ export default function Following() {
                             </div>
                             <div className="flex items-center">
                                 <div className="mr-4">
-                                    <button className="bg-white border-black border text-black h-[30px] w-[120px] rounded-[20px] ml-[50px] font-semibold my-auto">
+                                    <button className="bg-transparent border-black border text-black h-[30px] w-[120px] rounded-[20px] ml-[50px] font-semibold my-auto">
                                         Following
                                     </button>
                                 </div>
