@@ -45,7 +45,7 @@ function ModalEditProfile({ closeModal }) {
                         />
                     </div>
                     <div className="flex justify-center mb-[40px]">
-                        <div className="w-[570px] h-[100px] bg-white border border-black rounded-xl flex flex-col ">
+                        <div className="w-[570px] h-[100px] bg-white border border-black rounded-xl flex flex-col p-2 ">
                             <div className="flex flex-row justify-between mx-2">
                                 <p>Bio</p>
                                 <p className="text-slate-500 text-[0.75rem]">
@@ -56,9 +56,9 @@ function ModalEditProfile({ closeModal }) {
                                 style={{ overflow: "hidden" }}
                                 onChange={handleTextareaChange}
                                 maxLength="160"
-                                placeholder="text"
+                                placeholder="Masukan Bio"
                                 rows="4"
-                                className=" w-[569px] h-[100px] rounded-b-xl border-none resize-none focus:ring-none focus:ring-0"
+                                className=" w-[560px] h-[100px] rounded-b-xl border-none resize-none focus:ring-none focus:ring-0"
                             ></textarea>
                         </div>
                     </div>
@@ -69,7 +69,7 @@ function ModalEditProfile({ closeModal }) {
 }
 
 ModalEditProfile.propTypes = {
-    cancelModal: PropTypes.func.isRequired,
+    closeModal: PropTypes.func.isRequired,
 };
 
 export default ModalEditProfile;

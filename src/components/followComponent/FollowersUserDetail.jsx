@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "../Header";
 
-export default function Followers() {
+export default function FollowersUserDetail() {
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
             JSON.parse(
@@ -9,7 +9,7 @@ export default function Followers() {
             )
     );
 
-    const userData = JSON.parse(localStorage.getItem("user"));
+    const userData = JSON.parse(localStorage.getItem("userDetail"));
     const followers = userData?.followers;
     return (
         <div className="min-h-screen">
@@ -17,14 +17,14 @@ export default function Followers() {
                 <div className="flex justify-center w-full">
                     <Link
                         className="p-4 grow text-center hover:bg-gray-100 border-b-[5px] border-b-[#00acee]"
-                        to="/profile/followers"
+                        to={`/profile/${userData?.id}/followers`}
                     >
                         Followers
                     </Link>
 
                     <Link
                         className="p-4 grow text-center hover:bg-gray-100"
-                        to="/profile/following"
+                        to={`/profile/${userData?.id}/following`}
                     >
                         Following
                     </Link>

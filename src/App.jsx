@@ -16,10 +16,12 @@ import { setUser } from "./redux/slices/user";
 import ProfilePageById from "./pages/ProfilePageById";
 import FollowersPage from "./pages/FollowerPage";
 import FollowingPage from "./pages/FollowingPage";
+import FollowersUserDetailPage from "./pages/FollowersUserDetail";
+import FollowingUserDetailPage from "./pages/FollowingUserDetailPage";
+
 
 function App() {
     const [session, setSession] = useState(null);
-    const dispatch = useDispatch();
     const location = useLocation();
 
     useEffect(() => {
@@ -30,7 +32,6 @@ function App() {
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session?.user);
             localStorage.setItem("token", session?.access_token);
         });
 
@@ -38,8 +39,10 @@ function App() {
     }, []);
 
     useEffect(() => {
-        dispatch(setUser(session));
-    }, [dispatch, session]);
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
+    }, []);
 
     if (!session) {
         return (
@@ -48,14 +51,10 @@ function App() {
                 <Route
                     path="*"
                     element={
-                        <Middleware
-                            page={
-                                <Navigate
-                                    to={"/login"}
-                                    state={{ from: location }}
-                                    replace
-                                />
-                            }
+                        <Navigate
+                            to={"/login"}
+                            state={{ from: location }}
+                            replace
                         />
                     }
                 ></Route>
@@ -65,10 +64,8 @@ function App() {
     return (
         <Routes>
             {/* protected routenya  */}
-            {location.pathname === "/login" && (
-                <Navigate to={"/"} state={{ from: location }} replace />
-            )}
-            <Route path="/" element={<Middleware page={<MainLayout />} />}>
+
+            <Route path="/" element={<MainLayout />}>
                 <Route path="/" element={<BerandaPage />} />
                 <Route path="/tweet/:id" element={<TweetPage />} />
                 <Route path="/trend" element={<TrendPage />} />
@@ -77,8 +74,18 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="profile/followers" element={<FollowersPage />} />
                 <Route path="profile/following" element={<FollowingPage />} />
+                <Route path="profile/:id/followers" element={<FollowersUserDetailPage/>} />
+                <Route path="profile/:id/following" element={<FollowingUserDetailPage />} />
                 <Route path="/profile/:id" element={<ProfilePageById />} />
             </Route>
+            <Route
+                path="/login"
+                element={
+                    location.pathname === "/login" && (
+                        <Navigate to={"/"} replace />
+                    )
+                }
+            />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
