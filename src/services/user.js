@@ -27,3 +27,7 @@ export const followUser = (data) => {
 export const getUserById = (id) => {
     return api().get(`/v1/user/${id}`);
 }
+
+export const createBio = (bio) => {
+    return api().post(`/v1/profile/bio`, bio);
+}

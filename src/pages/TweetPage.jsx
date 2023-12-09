@@ -26,6 +26,18 @@ function TweetPage() {
                 <Header value="Postingan" />
                 <SkeletonLoading />
                 <CommentTweet />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
+                <SkeletonLoading />
             </>
         );
     }

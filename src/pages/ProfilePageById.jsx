@@ -12,14 +12,15 @@ function ProfilePageById() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [userDetail, setUserDetail] = useState();
-    const [openModal, setOpenModal] = useState(false);
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
             JSON.parse(
                 localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
             )
     );
-
+    const users = JSON.parse(localStorage.getItem("users"));
+    const findUser = users?.find((user) => user.id === id);
+    const isFollow = findUser.isFollow;
     const userInfo = async () => {
         try {
             setLoading(true);
@@ -38,17 +39,11 @@ function ProfilePageById() {
         }
     };
 
+    const bio = userDetail?.bio[userDetail?.bio.length - 1];
+
     useEffect(() => {
         userInfo();
     }, []);
-
-    const modalHandler = () => {
-        setOpenModal(true);
-    };
-
-    const closeModal = () => {
-        setOpenModal(false);
-    };
 
     if (loading) {
         return (
@@ -105,9 +100,15 @@ function ProfilePageById() {
                     alt="profile"
                 />
                 <div className="my-3 mx-2">
-                    <button className="p-2 border rounded-full text-sm pl-6 pr-6 font-bold border-gray-300 hover:bg-gray-100">
-                        Edit Profile
-                    </button>
+                    {isFollow ? (
+                        <button className="bg-transparent border-black border text-black h-[30px] w-[120px] rounded-[20px] ml-[50px] font-semibold my-auto cursor-pointer">
+                            Following
+                        </button>
+                    ) : (
+                        <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto cursor-pointer">
+                            Follow
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -123,6 +124,7 @@ function ProfilePageById() {
                             .split(" ")
                             .join("")}
                 </h5>
+                <span className="text-sm mt-2">{bio?.bio}</span>
             </div>
             <div className="flex flex-row p-3 relative bottom-[5.8rem]">
                 <div className="flex justify-center items-center">
@@ -147,7 +149,10 @@ function ProfilePageById() {
             </div>
             <div className="flex flex-row p-3 relative bottom-[6.4rem]">
                 <div className="flex flex-row justify-center items-center mr-4">
-                    <Link to={`/profile/${userDetail?.id}/following`} className="hover:border-b">
+                    <Link
+                        to={`/profile/${userDetail?.id}/following`}
+                        className="hover:border-b"
+                    >
                         <span className="ml-1 font-bold">
                             {userDetail?.following?.length}
                         </span>
@@ -157,7 +162,10 @@ function ProfilePageById() {
                     </Link>
                 </div>
                 <div className="flex flex-row justify-center items-center mr-4">
-                    <Link to={`/profile/${userDetail?.id}/followers`} className="hover:border-b">
+                    <Link
+                        to={`/profile/${userDetail?.id}/followers`}
+                        className="hover:border-b"
+                    >
                         <span className="ml-1 font-bold">
                             {userDetail?.followers?.length}
                         </span>
