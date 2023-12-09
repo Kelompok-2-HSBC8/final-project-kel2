@@ -1,16 +1,22 @@
 // eslint-disable-next-line no-unused-vars
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
 import ModalPost from "../components/ModalPost";
 import ModalLogout from "../components/ModalLogout";
+import axios from 'axios';
+
+const suggestionsData = ['Suggestion 1', 'Suggestion 2', 'Suggestion 3'];
 
 function MainLayout({ children }) {
     const [openPostModal, setOpenPostModal] = useState(false);
     const [active, setActive] = useState();
     const path = window.location.pathname;
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     const openPost = () => {
         setOpenPostModal(true);
@@ -50,6 +56,18 @@ function MainLayout({ children }) {
                 localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
             )
     );
+    
+    const handleSearch = (event) => {
+        const term = event.target.value;
+        setSearchTerm(term);
+    
+        // Filter suggestions based on input
+        const filtered = suggestionsData.filter((suggestion) =>
+            suggestion.toLowerCase().includes(term.toLowerCase())
+        );
+        setFilteredSuggestions(filtered);        
+    };
+
     return (
         <div className="grid grid-cols-12 w-auto box-border">
             <aside className="invisible absolute md:static md:visible md:col-span-2 xl:col-span-3 box-border">
@@ -411,9 +429,32 @@ function MainLayout({ children }) {
                                         className="bg-slate-200 pl-4 w-full h-[39px] focus:outline-none rounded-[50px] outline-none border-none focus:ring-0"
                                         type="search"
                                         placeholder="Search"
+                                        value={searchTerm}
+                                        onChange={handleSearch}
                                     />
+                                    {/* Suggestions */}
+                                    {searchTerm !== '' && (
+                                    <div className="suggestions bg-white border border-gray-300 mt-10 w-64 absolute rounded-md">
+                                        <ul className="list-none p-0 m-0">
+                                        {filteredSuggestions.length > 0 ? (
+                                            filteredSuggestions.map((suggestion, index) => (
+                                            <li
+                                                key={index}
+                                                className="p-2 cursor-pointer hover:bg-gray-200"
+                                                onClick={() => setSearchTerm(suggestion)}
+                                            >
+                                                {suggestion}
+                                            </li>
+                                            ))
+                                        ) : (
+                                            <li className="p-2">No suggestions found</li>
+                                        )}
+                                        </ul>
+                                    </div>
+                                )}
                                 </button>
 
+                                
                                 <div className="flex flex-col w-[350px] rounded-[16px] bg-[#F7F9FA] mt-2 pt-3">
                                     <h1 className="font-bold text-[20px] p-5">
                                         Trends for you
