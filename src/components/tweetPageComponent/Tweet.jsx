@@ -11,7 +11,7 @@ export default function Tweet({ data }) {
         commentBy,
     } = data;
     return (
-        <div className="min-h-screen">
+        <div className="">
             <section className="tweet p-4 border-b border-slate-300">
                 <div className="flex items-center mb-2">
                     <div className="mr-4">

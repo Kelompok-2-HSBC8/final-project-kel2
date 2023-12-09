@@ -10,6 +10,7 @@ function ModalLogout({ cancelLogout }) {
         auth.logout();
         await supabase.auth.signOut();
         navigate("/login");
+        window.location.reload();
     };
 
     return (

@@ -32,3 +32,7 @@ export const likeTweet = (tweetId) => {
 export const unlikeTweet = (id) => {
     return api().delete(`/v1/tweet/like`, { data: id });
 };
+
+export const commentTweet = (tweetId) => {
+    return api().post(`/v1/tweet/comment`, tweetId)
+}

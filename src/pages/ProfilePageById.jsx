@@ -1,15 +1,62 @@
 // eslint-disable-next-line no-unused-vars
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment/moment";
+import ModalEditProfile from "../components/ModalEditProfile";
+import { getUserById } from "../services/user";
+import Loading from "../components/Loading";
+import TweetCard from "../components/berandaComponent/TweetCard";
 
 function ProfilePageById() {
+    const { id } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [userDetail, setUserDetail] = useState();
+    const [openModal, setOpenModal] = useState(false);
     const data = JSON.parse(
         localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
             JSON.parse(
                 localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
             )
     );
+
+    const userInfo = async () => {
+        try {
+            setLoading(true);
+            const res = await getUserById(id);
+            if (res.data) {
+                setUserDetail(res.data.data);
+                localStorage.setItem(
+                    "userDetail",
+                    JSON.stringify(res.data.data)
+                );
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        userInfo();
+    }, []);
+
+    const modalHandler = () => {
+        setOpenModal(true);
+    };
+
+    const closeModal = () => {
+        setOpenModal(false);
+    };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen w-full p-2">
+                <Loading />
+            </div>
+        );
+    }
 
     return (
         <div className="w-full flex flex-col border overflow-x-hidden min-h-screen">
@@ -38,23 +85,23 @@ function ProfilePageById() {
                 </button>
                 <div className="flex flex-col justify-center items-start mx-3">
                     <h1 className="font-bold">
-                        {data?.user.user_metadata.name || "-"}
+                        {userDetail?.raw_user_meta_data?.name || "-"}
                     </h1>
                     <h3 className="text-sm font-[200] opacity-50">
-                        0 Postingan
+                        {userDetail?.tweet.length} Postingan
                     </h3>
                 </div>
             </div>
 
             <img
                 className="max-h-[15rem] mt-[52px] bg-cover cursor-pointer filter hover:blur-[2px] -z-[999999] min-w-full"
-                src={data?.user?.user_metadata?.avatar_url || "-"}
+                src={userDetail?.raw_user_meta_data?.avatar_url || "-"}
                 alt="bg"
             />
             <div className="flex flex-row justify-between">
                 <img
                     className="relative bottom-20 mx-5 min-w-[5rem] min-h-[8rem] bg-cover rounded-full border-4 border-white cursor-pointer hover:blur-[2px] filter max-h-[5rem]"
-                    src={data?.user?.user_metadata?.avatar_url || "-"}
+                    src={userDetail?.raw_user_meta_data?.avatar_url || "-"}
                     alt="profile"
                 />
                 <div className="my-3 mx-2">
@@ -66,12 +113,12 @@ function ProfilePageById() {
 
             <div className="flex flex-col p-3 relative bottom-20">
                 <h2 className="font-bold text-2xl">
-                    {data?.user.user_metadata.name || "-"}
+                    {userDetail?.raw_user_meta_data?.name || "-"}
                 </h2>
                 <h5 className="text-gray-500 font-[100]">
                     @
-                    {data?.user.user_metadata.user_name ||
-                        data?.user.user_metadata.name
+                    {userDetail?.raw_user_meta_data?.user_name ||
+                        userDetail?.raw_user_meta_data?.name
                             .toLowerCase()
                             .split(" ")
                             .join("")}
@@ -100,31 +147,64 @@ function ProfilePageById() {
             </div>
             <div className="flex flex-row p-3 relative bottom-[6.4rem]">
                 <div className="flex flex-row justify-center items-center mr-4">
-                    <span className="ml-1 font-bold">{0}</span>
-                    <span className="font-[300] mx-2 text-gray-500">
-                        Mengikuti
-                    </span>
+                    <Link to={`/profile/${userDetail?.id}/following`} className="hover:border-b">
+                        <span className="ml-1 font-bold">
+                            {userDetail?.following?.length}
+                        </span>
+                        <span className="font-[300] mx-2 text-gray-500">
+                            Mengikuti
+                        </span>
+                    </Link>
                 </div>
                 <div className="flex flex-row justify-center items-center mr-4">
-                    <span className="ml-1 font-bold">{0}</span>
-                    <span className="font-[300] mx-2 text-gray-500">
-                        Pengikut
-                    </span>
+                    <Link to={`/profile/${userDetail?.id}/followers`} className="hover:border-b">
+                        <span className="ml-1 font-bold">
+                            {userDetail?.followers?.length}
+                        </span>
+                        <span className="font-[300] mx-2 text-gray-500">
+                            Pengikut
+                        </span>
+                    </Link>
                 </div>
             </div>
             <div className="flex flex-row relative bottom-24 border border-t-0 boder-r-0 border-l-0">
                 <div className="p-4 border-[5px] border-l-0 border-t-0 border-r-0 border-[#00acee] cursor-pointer hover:bg-gray-100">
                     Postingan
                 </div>
-                <div className="p-4 cursor-pointer hover:bg-gray-100 text-gray-400">
-                    Balasan
-                </div>
-                <div className="p-4 cursor-pointer hover:bg-gray-100 text-gray-400">
-                    Sorotan
-                </div>
-                <div className="p-4 cursor-pointer hover:bg-gray-100 text-gray-400">
-                    Media
-                </div>
+            </div>
+            <div className="flex flex-col relative w-full bottom-24 p-0 m-0">
+                <ul>
+                    {userDetail?.tweet?.map((tweet) => {
+                        return (
+                            <li key={tweet.id}>
+                                {/* <Link to={`/tweet/${tweet?.id}`}> */}
+                                <TweetCard
+                                    tweet={tweet?.content}
+                                    id={tweet?.id}
+                                    userName={
+                                        tweet?.postedBy?.raw_user_meta_data
+                                            .user_name ??
+                                        tweet?.postedBy?.raw_user_meta_data.name
+                                    }
+                                    displayName={
+                                        tweet?.postedBy?.raw_user_meta_data.name
+                                    }
+                                    avatar={
+                                        tweet?.postedBy?.raw_user_meta_data
+                                            .avatar_url ||
+                                        "https://as2.ftcdn.net/v2/jpg/03/32/59/65/1000_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
+                                    }
+                                    totalLikes={tweet.likesBy}
+                                    totalComments={tweet.commentBy}
+                                    totalRetweets={tweet.retweetBy}
+                                    totalShare={tweet.shareBy}
+                                    date={tweet.createdAt}
+                                />
+                                {/* </Link> */}
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
             {/* <div className="flex flex-col relative w-full bottom-24 p-0 m-0">
                 <div className="flex flex-row p-4 w-full border border-l-0 border-r-0 hover:bg-gray-100 cursor-pointer">

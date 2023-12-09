@@ -5,6 +5,9 @@ import Header from "../components/Header";
 import Tweet from "../components/tweetPageComponent/Tweet";
 import Loading from "../components/Loading";
 import { getTweetById } from "../services/tweet";
+import SkeletonLoading from "../components/SkeletonLoading";
+import CommentTweet from "../components/berandaComponent/CommentTweet";
+import CommentCard from "../components/berandaComponent/CommentCard";
 
 function TweetPage() {
     const { id } = useParams();
@@ -19,16 +22,42 @@ function TweetPage() {
 
     if (!tweet) {
         return (
-            <div className="flex justify-center items-center">
-                <Loading />
-            </div>
+            <>
+                <Header value="Postingan" />
+                <SkeletonLoading />
+                <CommentTweet />
+            </>
         );
     }
 
     return (
         <>
-            <Header value="Postingan" />
-            <Tweet data={tweet.data} />
+            <div className="min-h-screen">
+                <Header value="Postingan" />
+                <Tweet data={tweet.data} />
+                <CommentTweet />
+                {tweet.data &&
+                    tweet.data.commentBy.map((item, index) => {
+                        return (
+                            <CommentCard
+                                key={index}
+                                avatar={
+                                    item?.user?.raw_user_meta_data?.avatar_url || '-'
+                                }
+                                name={
+                                    item?.user?.raw_user_meta_data?.name || '-'
+                                }
+                                username={
+                                    item?.user?.raw_user_meta_data?.username ||
+                                    item?.user?.raw_user_meta_data?.user_name ||
+                                    item?.user?.raw_user_meta_data?.name.toLowerCase().split(" ").join("")
+                                }
+                                content={item?.content || '-'}
+                                createdAt={item?.createdAt || '-'}
+                            />
+                        );
+                    })}
+            </div>
         </>
     );
 }

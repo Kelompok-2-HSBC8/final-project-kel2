@@ -5,13 +5,25 @@ import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
 import ModalPost from "../components/ModalPost";
 import ModalLogout from "../components/ModalLogout";
+import { followUser, getAllUsers } from "../services/user";
+import SkeletonLoading from "../components/SkeletonLoading";
 
 function MainLayout({ children }) {
     const [openPostModal, setOpenPostModal] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [follow, setFollow] = useState(false);
+    const [users, setUsers] = useState([]);
     const [active, setActive] = useState();
     const path = window.location.pathname;
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
+    const data = JSON.parse(
+        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
+            JSON.parse(
+                localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
+            )
+    );
 
+    const userId = data?.user?.id;
     const openPost = () => {
         setOpenPostModal(true);
         setOpenLogoutModal(false);
@@ -44,12 +56,47 @@ function MainLayout({ children }) {
         }
     }, [path]);
 
-    const data = JSON.parse(
-        localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
-            JSON.parse(
-                localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token")
-            )
-    );
+    const getAllUser = async () => {
+        try {
+            setLoading(true);
+            const res = await getAllUsers();
+            if (res.data) {
+                const data = res.data.data;
+                const newData = data.filter((item) => item.id !== userId);
+                const formattedData = newData.map((user) => ({
+                    ...user,
+                    isFollow:
+                        user.followers.filter(
+                            (item) => item.followedBy.id === userId
+                        ).length > 0,
+                }));
+                localStorage.setItem("users", JSON.stringify(formattedData));
+                setUsers(formattedData);
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        getAllUser();
+    }, []);
+
+    const handleFollow = async (id) => {
+        try {
+            const findUser = users.find((user) => user.id === id);
+            if (findUser.isFollow) {
+                return;
+            }
+            findUser.isFollow = !findUser.isFollow;
+            setUsers([...users]);
+            await followUser({ followId: id });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return (
         <div className="grid grid-cols-12 w-auto box-border">
             <aside className="invisible absolute md:static md:visible md:col-span-2 xl:col-span-3 box-border">
@@ -799,75 +846,75 @@ function MainLayout({ children }) {
                                     <h1 className="text-[20px] font-bold mb-3 ml-7 mt-3">
                                         Who To Follow
                                     </h1>
-                                    <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px]">
-                                        <div className="mx-auto flex my-auto">
-                                            <img
-                                                className="h-[45px] w-[45px] rounded-full"
-                                                src="./harisenin.jpg"
-                                                alt=""
-                                            />
-                                            <div className="ml-3 my-auto">
-                                                <a
-                                                    className="font-bold hover:underline"
-                                                    href=""
+                                    {loading ? (
+                                        <>
+                                            <SkeletonLoading type={"sidebar"} />
+                                            <SkeletonLoading type={"sidebar"} />
+                                            <SkeletonLoading type={"sidebar"} />
+                                        </>
+                                    ) : (
+                                        users.map((item, index) => {
+                                            return (
+                                                <div
+                                                    className="flex flex-row justify-between items-center p-2 cursor-pointer hover:bg-slate-200 h-[80px]"
+                                                    key={index}
                                                 >
-                                                    harisenin.com
-                                                </a>
-                                                <p className="text-slate-500">
-                                                    @harisenin
-                                                </p>
-                                            </div>
-                                            <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
-                                                Follow
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px]">
-                                        <div className="mx-auto flex my-auto">
-                                            <img
-                                                className="h-[45px] w-[45px] rounded-full"
-                                                src="./harisenin.jpg"
-                                                alt=""
-                                            />
-                                            <div className="ml-3">
-                                                <a
-                                                    className="font-bold hover:underline"
-                                                    href=""
-                                                >
-                                                    harisenin.com
-                                                </a>
-                                                <p className="text-slate-500">
-                                                    @harisenin
-                                                </p>
-                                            </div>
-                                            <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
-                                                Follow
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-row cursor-pointer hover:bg-slate-200 h-[80px] my-auto">
-                                        <div className="mx-auto flex my-auto">
-                                            <img
-                                                className="h-[45px] w-[45px] rounded-full"
-                                                src="./harisenin.jpg"
-                                                alt=""
-                                            />
-                                            <div className="ml-3">
-                                                <a
-                                                    className="font-bold hover:underline"
-                                                    href=""
-                                                >
-                                                    harisenin.com
-                                                </a>
-                                                <p className="text-slate-500">
-                                                    @harisenin
-                                                </p>
-                                            </div>
-                                            <button className="bg-black text-white h-[30px] w-[70px] rounded-[20px] ml-[50px] font-semibold my-auto">
-                                                Follow
-                                            </button>
-                                        </div>
-                                    </div>
+                                                    <img
+                                                        className="h-[45px] w-[45px] rounded-full"
+                                                        src={
+                                                            item
+                                                                .raw_user_meta_data
+                                                                .avatar_url
+                                                        }
+                                                        alt=""
+                                                    />
+                                                    <div className="flex-grow ml-3">
+                                                        <a
+                                                            className="font-bold text-sm hover:underline"
+                                                            href=""
+                                                        >
+                                                            {
+                                                                item
+                                                                    ?.raw_user_meta_data
+                                                                    ?.name
+                                                            }
+                                                        </a>
+                                                        <p className="text-slate-500 text-xs">
+                                                            @
+                                                            {item
+                                                                ?.raw_user_meta_data
+                                                                ?.user_name ||
+                                                                item?.raw_user_meta_data?.name
+                                                                    ?.toLowerCase()
+                                                                    .split(" ")
+                                                                    .join("") ||
+                                                                item
+                                                                    ?.raw_user_meta_data
+                                                                    ?.username}
+                                                        </p>
+                                                    </div>
+                                                    <button
+                                                        className={`${
+                                                            item.isFollow ||
+                                                            follow
+                                                                ? "bg-transparent border-black border w-[120px] text-black"
+                                                                : "bg-black w-[70px] text-white"
+                                                        }  h-[30px]  rounded-[20px] ml-[50px] font-semibold my-auto`}
+                                                        onClick={() =>
+                                                            handleFollow(
+                                                                item.id
+                                                            )
+                                                        }
+                                                    >
+                                                        {item.isFollow || follow
+                                                            ? "Following"
+                                                            : "Follow"}
+                                                    </button>
+                                                </div>
+                                            );
+                                        })
+                                    )}
+
                                     <div className="cursor-pointer hover:bg-slate-200 p-5">
                                         <a className="text-sky-500" href="">
                                             Show More
