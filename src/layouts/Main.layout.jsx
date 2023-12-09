@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import MobileView from "../components/MobileView";
 import ModalPost from "../components/ModalPost";
 import ModalLogout from "../components/ModalLogout";
+import MessageContent from "../components/messageComponent/MessageContent";
 
 function MainLayout({ children }) {
     const [openPostModal, setOpenPostModal] = useState(false);
@@ -377,18 +378,34 @@ function MainLayout({ children }) {
             </aside>
 
             <div className="col-span-12 md:col-span-10 xl:col-span-9">
-                <div className="grid-cols-12 grid overflow-auto h-screen">
-                    <main className="col-span-12 md:col-span-12 lg:col-span-7">
-                        <div className="flex flex-col w-full h-screen box-border justify-between">
-                            <div className="md:border-x-2">
-                                {children}
-                                <Outlet />
-                                <MobileView />
+                {active === "Chat" && (
+                    <div className="grid-cols-12 grid">
+                        <main className="col-span-12 md:col-span-12 lg:col-span-5">
+                            <div className="flex flex-col w-full h-screen box-border justify-between">
+                                <div className="md:border-x-2">
+                                    {children}
+                                    <Outlet />
+                                    <MobileView />
+                                </div>
                             </div>
-                        </div>
-                    </main>
+                        </main>
+                        <section className="invisible lg:visible lg:col-span-7">
+                            <MessageContent />
+                        </section>
+                    </div>
+                )}
+                {active !== "Chat" && (
+                    <div className="grid-cols-12 grid overflow-auto h-screen">
+                        <main className="col-span-12 md:col-span-12 lg:col-span-7">
+                            <div className="flex flex-col w-full h-screen box-border justify-between">
+                                <div className="md:border-x-2">
+                                    {children}
+                                    <Outlet />
+                                    <MobileView />
+                                </div>
+                            </div>
+                        </main>
 
-                    { active !== 'Chat' &&
                         <section className="invisible lg:visible absolute lg:static lg:col-span-5">
                             <div className="flex flex-col m-auto box-border items-center justify-center">
                                 <button className="flex flex-row g-sky-500 mt-4 group bg-slate-200 rounded-[50px] w-[350px] mx-6 sticky top-0 border-y focus:ring-2 focus:ring-sky-500 focus:border-sky-500">
@@ -889,8 +906,8 @@ function MainLayout({ children }) {
                                 </div>
                             </div>
                         </section>
-                    }
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     );
