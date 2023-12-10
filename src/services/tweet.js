@@ -1,11 +1,14 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token");
+const data = JSON.parse(
+    localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token") ||
+    JSON.parse(localStorage.getItem("sb-lfodunqhxvhczpjvpxnh-auth-token"))
+);
 const api = ({ headers = {}, params = {} } = {}) => {
     const instance = axios.create({
         baseURL: `${import.meta.env.VITE_BASE_API_URL}`,
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${data.access_token}`,
             ...headers,
         },
         params,
